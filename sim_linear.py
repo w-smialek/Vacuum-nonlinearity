@@ -35,34 +35,35 @@ def H_mat(pperp,ppar,t0,s,t):
 def RHS(t,y,pperp,ppar,t0,s):
     return np.matmul(H_mat(pperp,ppar,t0,s,t),y)
 
-# plt.plot([om_big(p1,p2,time0,stdev,t).imag for t in np.linspace(-time0,time0,1000)])
-# plt.show()
-# plt.plot([om(p1,p2,time0,stdev,t).real for t in np.linspace(-time0,time0,1000)])
-# plt.show()
-
 ###
 ### Integration
 ###
 
 time0,stdev = 200,20
 
-integration_interval = (-7*time0,7*time0)
+# plt.plot([om_big(0,1,time0,stdev,t).real for t in np.linspace(-time0,time0,200)])
+# plt.show()
+# plt.plot([om(0,1,time0,stdev,t).real for t in np.linspace(-time0,time0,200)])
+# plt.show()
+
+
+integration_interval = (-time0,time0)
 init_y = np.array([1+0j,0+0j])
 
-resolution = 100
+resolution = 200
 pperp = 0
-pmin = 1.74
-pmax = 1.78
+pmin = 0.5
+pmax = 3
 
-# densities = []
-# for pparal in np.linspace(pmin,pmax,resolution):
-#     solution = integrate.solve_ivp(RHS,integration_interval,init_y,args=(pperp,pparal,time0,stdev))
-#     densities.append(abs(solution.y.T[-1,1])**2)
+densities = []
+for pparal in np.linspace(pmin,pmax,resolution):
+    solution = integrate.solve_ivp(RHS,integration_interval,init_y,args=(pperp,pparal,time0,stdev))
+    densities.append(abs(solution.y.T[-1,1])**2)
 
-# plt.style.use('ggplot')
-# plt.plot(np.linspace(pmin,pmax,resolution),densities)
-# plt.savefig("single_train_zoomed.png",dpi=300)
-# plt.show()
+plt.style.use('ggplot')
+plt.plot(np.linspace(pmin,pmax,resolution),densities)
+plt.savefig("ref.png",dpi=300)
+plt.show()
 
 densities = []
 for pparal in np.linspace(pmin,pmax,resolution):
