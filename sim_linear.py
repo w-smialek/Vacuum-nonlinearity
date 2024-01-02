@@ -50,32 +50,55 @@ time0,stdev = 200,20
 integration_interval = (-time0,time0)
 init_y = np.array([1+0j,0+0j])
 
-resolution = 200
+resolution = 500
 pperp = 0
 pmin = 0.5
 pmax = 3
 
+f = open("o3601p06r1", "r")
+lines = f.readlines()
+
+x = [float(l.split()[0]) for l in lines]
+y = np.array([float(l.split()[2]) for l in lines])
+y = np.array([y[int(a)] for a in np.linspace(0,9999,resolution)])
+
 densities = []
+index = 0
 for pparal in np.linspace(pmin,pmax,resolution):
     solution = integrate.solve_ivp(RHS,integration_interval,init_y,args=(pperp,pparal,time0,stdev))
     densities.append(abs(solution.y.T[-1,1])**2)
+    index += 1
+    print(index)
 
 plt.style.use('ggplot')
-plt.plot(np.linspace(pmin,pmax,resolution),densities)
+plt.plot(np.linspace(pmin,pmax,resolution),densities,label="moje wyniki")
+plt.plot(np.linspace(pmin,pmax,resolution),y,label="dane")
+plt.legend()
 plt.savefig("ref.png",dpi=300)
-plt.show()
+# plt.show()
+plt.close()
+
+f = open("o3601p06r2", "r")
+lines = f.readlines()
+
+x = [float(l.split()[0]) for l in lines]
+y = np.array([float(l.split()[2]) for l in lines])
+y = np.array([y[int(a)] for a in np.linspace(0,9999,resolution)])
 
 densities = []
+index = 0
 for pparal in np.linspace(pmin,pmax,resolution):
     solution = integrate.solve_ivp(RHS,integration_interval,init_y,args=(pperp,pparal,time0,stdev))
     outcome = solution.y.T[-1]
     solution = integrate.solve_ivp(RHS,integration_interval,outcome,args=(pperp,pparal,time0,stdev))
     densities.append(abs(solution.y.T[-1,1])**2)
-
+    index += 1
+    print(index)
 
 plt.style.use('ggplot')
-plt.plot(np.linspace(pmin,pmax,resolution),densities)
-plt.savefig("double_train_zoomed_longer.png",dpi=300)
+plt.plot(np.linspace(pmin,pmax,resolution),densities,label="moje wyniki")
+plt.plot(np.linspace(pmin,pmax,resolution),y,label="dane")
+plt.savefig("ref2.png",dpi=300)
 plt.show()
 
 densities = []

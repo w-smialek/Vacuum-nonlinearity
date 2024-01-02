@@ -3,80 +3,89 @@ from scipy import interpolate
 from scipy import integrate
 import matplotlib.pyplot as plt
 
-# def potential_lin(fun_field, domain):
-#     field = [fun_field(i) for i in domain]
-#     return np.flip(integrate.cumtrapz(np.flip(field), domain, initial=0)), np.array(field)
+# # def potential_lin(fun_field, domain):
+# #     field = [fun_field(i) for i in domain]
+# #     return np.flip(integrate.cumtrapz(np.flip(field), domain, initial=0)), np.array(field)
 
-def field_formula_lin(t, t0, sigma, m):
-    return np.exp(-np.power((t-t0/2)/sigma,2*m)) - np.exp(-np.power((t+t0/2)/sigma,2*m))
+# e0 = -0.1
 
-def potential_lin(t, t0, sigma, m):
-    return integrate.quad(lambda x: field_formula_lin(x, t0, sigma, m),t,np.inf)
+# def field_formula_lin(t, t0, sigma, m):
+#     return e0*(np.exp(-np.power((t-t0/2)/sigma,2*m)) - np.exp(-np.power((t+t0/2)/sigma,2*m)))
 
+# def potential_lin(t, t0, sigma, m):
+#     return integrate.quad(lambda x: field_formula_lin(x, t0, sigma, m),t,np.inf)[0]
+
+# m = 1
+# t0 = 200
+# sigma = 20
+
+# pot = [potential_lin(i,t0,sigma,m) for i in np.linspace(-300,300,400)]
+
+# funpot = interpolate.interp1d(np.linspace(-300,300,400),pot)
+
+# def omega(t, p_par, p_perp):
+#     return np.sqrt(1 + np.power(p_perp,2) + np.power(p_par - funpot(t),2))
+
+# def big_omega(t, p_par, p_perp):
+#     return - field_formula_lin(t,t0,sigma,m)* (p_par - funpot(t))/(2*np.power(omega(t,p_par,p_perp),2))
+
+# def u_mat(t, p_par, p_perp):
+#     return np.array([[-1j*omega(t,p_par,p_perp),-big_omega(t,p_par,p_perp)+0j],[-big_omega(t,p_par,p_perp)+0j,1j*omega(t,p_par,p_perp)]])
+
+
+# def RHS(t,y,p_par,p_perp):
+#     return np.matmul(u_mat(t,p_par,p_perp),y)
+
+# init_y = np.array([1+0j,0+0j])
+# integration_interval = (-t0, t0)
+
+# resolution = 200
+# pperp = 0
+# pmin = 0.5
+# pmax = 3
+
+# densities = []
+# index = 0
+# for pparal in np.linspace(pmin,pmax,resolution):
+#     solution = integrate.solve_ivp(RHS,integration_interval,init_y,args=(pparal,0))
+#     densities.append(abs(solution.y[-1,-1])**2)
+#     index += 1
+#     print(index)
+
+# plt.style.use('ggplot')
+# plt.plot(np.linspace(pmin,pmax,resolution),densities)
+# plt.savefig("new.png",dpi=300)
+# plt.show()
+
+e0 = -0.1
 m = 1
 t0 = 200
 sigma = 20
-e0 = -0.1
-domain = np.linspace(-t0,t0,400)
 
-pot, field = potential_lin(lambda x : e0*field_formula_lin(x,t0,sigma,m), domain)
+def field_formula_lin(t):
+    return e0*(np.exp(-np.power((t-t0/2)/sigma,2*m)) - np.exp(-np.power((t+t0/2)/sigma,2*m)))
 
-# plt.plot(field)
-# plt.show()
-# plt.plot(pot)
-# plt.show()
+def potential_lin(t):
+    return integrate.quad(field_formula_lin,t,np.inf)[0]
+pot = [potential_lin(i) for i in np.linspace(-200,200,400)]
+potential_lin = interpolate.interp1d(np.linspace(-200,200,400),pot)
 
-def omega(p_par, p_perp, pot):
-    return np.sqrt(1 + np.power(p_perp,2) + np.power(p_par - pot,2))
+def omega(t,p):
+    return np.sqrt(1+p**2+potential_lin(t)**2)
 
-def big_omega(p_par, p_perp, field, pot, omega):
-    return - field* (p_par - pot)/(2*np.power(omega,2))
+def big_omega(t,p):
+    return field_formula_lin(t)*potential_lin(t)/(2*omega(t,p)**2)
 
-om = omega(1.75,0,pot)
-bom = big_omega(1.75,0,field,pot,om)
+def RHS(t,y,p,xd):
+    return np.array([-1j*omega(t,p)*y[0]-big_omega(t,p)*y[1],-big_omega(t,p)*y[0]+1j*omega(t,p)*y[1]])
 
-# plt.plot(om)
-# plt.show()
-# plt.plot(bom)
-# plt.show()
+ind = 0
+dens = []
+for pp in np.linspace(0.5,3,100):
+    solution = integrate.solve_ivp(RHS,(-t0,t0),np.array([1+0j,0j]),args=(pp,0))
+    dens.append(abs(solution.y[-1,-1])**2)
+    ind += 1
+    print(ind)
 
-u_mat = np.array([-1j*om,0j-bom,0j-bom,1j*om])
-u_mat = u_mat.reshape((2,2,len(om)))
-
-# u_instance = interpolate.interp1d(domain, u_mat)
-
-# def RHS(t,y):
-#     return np.matmul(u_instance(t),y)
-
-init_y = np.array([1+0j,0+0j])
-integration_interval = (domain[0], domain[-1])
-
-resolution = 200
-pperp = 0
-pmin = 0.5
-pmax = 3
-
-densities = []
-index = 0
-for pparal in np.linspace(pmin,pmax,resolution):
-
-    om = omega(pparal,0,pot)
-    bom = big_omega(pparal,0,field,pot,om)
-
-    u_mat = np.array([-1j*om,0j-bom,0j-bom,1j*om])
-    u_mat = u_mat.reshape((2,2,len(om)))
-    # u_instance = interpolate.interp1d(domain, u_mat)
-
-    solution = integrate.solve_ivp(lambda t, y: np.matmul(u_mat[:,:,(int(t)+200-1)],y),integration_interval,init_y,t_eval=domain)
-    # plt.plot(np.abs(solution.y[-1,:])**2)
-    # plt.show()
-    # densities.append(abs(solution.y.T[-1,1])**2)
-    # print(abs(solution.y[-1,-1])**2)
-    densities.append(abs(solution.y[-1,-1])**2)
-    index += 1
-    print(index)
-
-plt.style.use('ggplot')
-plt.plot(np.linspace(pmin,pmax,resolution),densities)
-plt.savefig("new.png",dpi=300)
+plt.plot(dens)
 plt.show()
