@@ -3,51 +3,105 @@ from scipy import interpolate
 from scipy import integrate
 import matplotlib.pyplot as plt
 
+def cart2pol(x, y):
+    rho = np.sqrt(x**2 + y**2)
+    phi = np.arctan2(y, x)
+    return(rho, phi)
+
 ###
 ### Arrays and interpolation
 ###
 
-def field_formula_function(t, t0, sigma, m):
-    return -(np.exp(-np.power((t-t0/2)/sigma,2*m)) - np.exp(-np.power((t+t0/2)/sigma,2*m)))
+### The metric sugnature +--- is used
+
+def field_formula_function_2d(t, om, n_rep, n_osc, chi, delta, sigma):
+    t = t + np.pi*n_rep
+    field_x = (np.sin(n_rep*om*t/2))**2*(np.cos(n_rep*n_osc*om*t+chi)*np.cos(delta))
+    field_y = sigma*(np.sin(n_rep*om*t/2))**2*(np.sin(n_rep*n_osc*om*t+chi)*np.sin(delta))
+    if 0 < om*t < 2*np.pi*n_rep:
+        return [field_x,field_y]
+    else:
+        return [0,0]
 
 def potential_array_function(field_array, domain):
     return np.flip(integrate.cumulative_trapezoid(np.flip(field_array), domain, initial=0))
 
-def omega(p_par, p_perp, pot):
-    return np.sqrt(1 + p_perp*p_perp + (p_par - pot)*(p_par - pot))
+def omega(p_vec, A_arr_x, A_arr_y):
+    return np.sqrt(1 + np.sum(p_vec*p_vec) - 2*(A_arr_x*p_vec[0] + A_arr_y*p_vec[1]) + (A_arr_x*A_arr_x+A_arr_y*A_arr_y))
 
 def big_omega(p_par, p_perp, field, pot, omega):
     return field*(p_par-pot)/(2*omega*omega)*(-1)
 
-def big_omega_f(p_par, p_perp, field, pot, omega):
-    return field/(2*omega*omega)*(-1)*np.sqrt(1+p_perp*p_perp)
-
+'''
 def RHS(t,y):
     return np.array([-1j*omega_interp(t)*y[0]-big_omega_interp(t)*y[1],-big_omega_interp(t)*y[0]+1j*omega_interp(t)*y[1]])
-def RHS_f(t,y):
-    return np.array([-1j*omega_interp(t)*y[0]+big_omega_interp(t)*y[1],-big_omega_interp(t)*y[0]+1j*omega_interp(t)*y[1]])
-
+'''
 ###
 ### Parameters
 ###
 
-e0 = -0.1
-m = 1
-sigma = 20
-t0 = 200
+e0 = 1
+om = 1
+N_pulses = 2
+N_osc = 2
+chi = np.pi/2
+sigma = 1
+delta = np.pi/8
 
-T_tot = 400
+T_tot = N_pulses*2*np.pi*om + 10
 domain_res = 1200
 
-p_par_domain = np.linspace(0.5,3,1000)
-p_perp = 0
+domain = np.linspace(-T_tot/2,T_tot/2,domain_res)
+field_array = np.array([field_formula_function_2d(t,om,N_pulses,N_osc,chi,delta,sigma) for t in domain])
+field_array_x = field_array[:,0]
+field_array_y = field_array[:,1]
 
-N_pulses = 1
+## Plot
+
+plt.plot(domain, field_array_x)
+plt.plot(domain, field_array_y)
+plt.show()
+
+r, theta = cart2pol(field_array_x, field_array_y)
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(theta, r)
+plt.show()
+
+##
 
 ###
-### Calculation 1D
+### Calculation 2D
 ###
 
+## Field coordinates are x,y. only A_1,A_2 will be non-zero four potential components due to homogeneity
+
+potential_array_x = potential_array_function(field_array_x, domain)
+potential_array_y = potential_array_function(field_array_y, domain)
+
+r, theta = cart2pol(potential_array_x, potential_array_y)
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(theta, r)
+plt.show()
+
+p_vec = np.array([1,0.75,0.5])
+
+omega_array = omega(p_vec,potential_array_x,potential_array_y)
+
+
+potential_interp_x = interpolate.CubicSpline(domain, potential_array_x)
+potential_interp_y = interpolate.CubicSpline(domain, potential_array_y)
+omega_interp = interpolate.CubicSpline(domain, omega_array)
+big_omega_array = np.array([-omega_interp(x,1)/(2*omega_interp(x)) for x in domain])
+big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
+
+# plt.plot(domain, potential_array_x)
+# plt.plot(domain, potential_array_y)
+plt.plot(domain,omega_array)
+plt.plot(domain,big_omega_array)
+plt.show()
+
+
+'''
 domain = np.linspace(-T_tot/2,T_tot/2,domain_res)
 field_array = N_pulses*[e0*field_formula_function(i,t0,sigma,m) for i in domain]
 
@@ -85,6 +139,7 @@ for p_par in p_par_domain:
 plt.plot(p_par_domain, amplitudes)
 plt.savefig("sim111.png",dpi=300)
 plt.show()
+'''
 
 ###
 ### Accuracy test
