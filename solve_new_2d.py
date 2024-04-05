@@ -10,6 +10,17 @@ import schwinger
 
 ### The metric sugnature +--- is used
 
+def field_formula_function_1d(t, t0, sigma, m, n_rep, delta_t):
+    f_val = sum([-(np.exp(-np.power((t-n*delta_t-t0/2)/sigma,2*m)) - np.exp(-np.power((t-n*delta_t+t0/2)/sigma,2*m))) for n in range(n_rep)])
+    return [f_val,0]
+
+def field_formula_function_1d_paper(t, om, n_rep):
+    if 0 < om*t < 2*np.pi*n_rep:
+        f_val = (np.sin(om*t/(2*n_rep)))**4*np.cos(om*t)
+        return [f_val,0]
+    else:
+        return [0,0]
+
 def field_formula_function_2d(t, om, n_rep, n_osc, chi, delta, sigma):
     t = t + np.pi*n_rep
     field_x = (np.sin(n_rep*om*t/2))**2*(np.cos(n_rep*n_osc*om*t+chi)*np.cos(delta))
@@ -18,18 +29,6 @@ def field_formula_function_2d(t, om, n_rep, n_osc, chi, delta, sigma):
         return [field_x,field_y]
     else:
         return [0,0]
-
-def potential_array_function(field_array, domain):
-    return np.flip(integrate.cumulative_trapezoid(np.flip(field_array), domain, initial=0))
-
-def omega(p_vec, A_arr_x, A_arr_y):
-    return np.sqrt(1 + np.sum(p_vec*p_vec) - 2*(A_arr_x*p_vec[0] + A_arr_y*p_vec[1]) + (A_arr_x*A_arr_x+A_arr_y*A_arr_y))
-
-def big_omega(p_par, p_perp, field, pot, omega):
-    return field*(p_par-pot)/(2*omega*omega)*(-1)
-
-def RHS(t,y):
-    return np.array([-1j*omega_interp(t)*y[0]-big_omega_interp(t)*y[1],-big_omega_interp(t)*y[0]+1j*omega_interp(t)*y[1]])
 
 ###
 ### Parameters
@@ -47,43 +46,26 @@ T_tot = N_pulses*2*np.pi*om + 10
 domain_res = 1200
 
 domain = np.linspace(-T_tot/2,T_tot/2,domain_res)
-field_array = np.array([field_formula_function_2d(t,om,N_pulses,N_osc,chi,delta,sigma) for t in domain])
+field_array = e0*np.array([field_formula_function_2d(t,om,N_pulses,N_osc,chi,delta,sigma) for t in domain])
 field_array_x = field_array[:,0]
 field_array_y = field_array[:,1]
 
-## Plot
+# plt.plot(domain, field_array_x)
+# plt.plot(domain, field_array_y)
+# plt.show()
 
-plt.plot(domain, field_array_x)
-plt.plot(domain, field_array_y)
-plt.show()
-
-schwinger.polar_plot(field_array_x,field_array_y)
+# schwinger.polar_plot(field_array_x,field_array_y)
 
 ###
 ### Calculation 2D
 ###
 
-## Field coordinates are x,y. only A_1,A_2 will be non-zero four potential components due to homogeneity
+potential_array_x = schwinger.potential_array_function(field_array_x, domain)
+potential_array_y = schwinger.potential_array_function(field_array_y, domain)
 
-potential_array_x = potential_array_function(field_array_x, domain)
-potential_array_y = potential_array_function(field_array_y, domain)
-
-p_vec = np.array([1,0.75,0.5])
-
-potential_interp_x = interpolate.CubicSpline(domain, potential_array_x)
-potential_interp_y = interpolate.CubicSpline(domain, potential_array_y)
-
-# plt.plot(domain, potential_array_x)
-# plt.plot(domain, potential_array_y)
-# plt.plot(domain,omega_array)
-# plt.plot(domain,big_omega_array)
-# plt.show()
-
-p_z = 0
-
-pxmin = -1
-pxmax = 1
-n_px = 30
+pxmin = 0.5
+pxmax = 3
+n_px = 50
 p_x_range = np.linspace(pxmin,pxmax,n_px)
 
 pymin = -1
@@ -91,39 +73,69 @@ pymax = 1
 n_py = 30
 p_y_range = np.linspace(pymin,pymax,n_py)
 
-amplitudes = np.zeros((n_py,n_px))
+p_z = 0
 
-for i_x, p_x in enumerate(p_x_range):
-    for i_y, p_y in enumerate(p_y_range):
-        omega_array = omega(np.array([p_x,p_y,p_z]),potential_array_x,potential_array_y)
-        omega_interp = interpolate.CubicSpline(domain, omega_array)
-        big_omega_array = np.array([-omega_interp(x,1)/(2*omega_interp(x)) for x in domain])
-        big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
+# amplitudes = np.zeros((n_px,n_py))
+# for i_x, p_x in enumerate(p_x_range):
+#     for i_y, p_y in enumerate(p_y_range):
 
-        solved = integrate.solve_ivp(RHS, (-T_tot/2,T_tot/2), np.array([1+0j,0j]))
+#         res = schwinger.schwinger_evolve(0,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
+#         amplitudes[i_x,i_y] = abs(res)**2
 
-        amplitudes[i_x,i_y] = abs(solved.y[-1,-1])**2
+#     print(100*(p_x - pxmin)/(pxmax-pxmin))
 
-        # print(100*(p_y - pymin)/(pymax-pymin))
-    print(100*(p_x - pxmin)/(pxmax-pxmin))
+# schwinger.plot_xy(amplitudes,p_x_range,p_y_range,10,True,False)
 
-xs, ys = np.meshgrid(p_x_range,p_y_range,indexing='ij',sparse=True)
-result_interp = interpolate.RegularGridInterpolator((xs[:,0],ys[0,:]),amplitudes)
+###
 
-# plt.imshow(amplitudes, origin='lower', extent=(pxmin, pxmax, pymin, pymax))
-# plt.show()
+e0 = 0.1
+om = 0.99
+T_tot = 6*np.pi
+domain_res = 400
+N_pulses = 3
 
-x = np.linspace(pxmin, pxmax, n_px*10)
-y = np.linspace(pymin, pymax, n_py*10)
-xg, yg = np.meshgrid(x, y, indexing='ij', sparse=True)
+domain = np.linspace(0,T_tot,domain_res*N_pulses)
 
-points_arr = np.array([[[j,i] for j in np.linspace(pxmin,pxmax,n_px*10)] for i in np.linspace(pymin,pymax,n_py*10)])
+field_array = e0*np.array([field_formula_function_1d_paper(t,om,N_pulses) for t in domain])
+field_array_x = field_array[:,0]
+field_array_y = field_array[:,1]
 
-result_array = result_interp(points_arr)
+potential_array_x = schwinger.potential_array_function(field_array_x, domain)
+potential_array_y = schwinger.potential_array_function(field_array_y, domain)
 
-plt.matshow(result_array, origin='lower', extent=(pxmin, pxmax, pymin, pymax))
+plt.plot(domain,field_array_x)
+plt.plot(domain,potential_array_x)
 plt.show()
 
-# plt.plot(p_par_domain, amplitudes)
-# plt.savefig("sim111.png",dpi=300)
-# plt.show()
+pxmin = -2
+pxmax = 2
+n_px = 5
+p_x_range = np.linspace(pxmin,pxmax,n_px)
+
+pymin = -2
+pymax = 2
+n_py = 5
+p_y_range = np.linspace(pymin,pymax,n_py)
+
+p_z = 0
+
+# amplitudes = np.zeros((n_px,n_py))
+# angles = np.zeros((n_px,n_py))
+# for i_x, p_x in enumerate(p_x_range):
+#     for i_y, p_y in enumerate(p_y_range):
+
+#         res = schwinger.schwinger_evolve(1/2,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([0+1j,0j]))
+#         amplitudes[i_x,i_y] = np.sqrt(abs(res))
+#         ### PIERWIASTEK TU JEST!!! ^
+#         angles[i_x,i_y] = np.angle(res)
+
+#     print(100*(p_x - pxmin)/(pxmax-pxmin))
+
+# np.save('amplitudes',amplitudes)
+# np.save('angles',angles)
+
+amplitudes = np.load('amplitudes.npy')
+angles = np.load('angles.npy')
+
+schwinger.plot_xy(amplitudes,p_x_range,p_y_range,10,True,"fig2_left_amplit.png")
+schwinger.plot_xy(angles,p_x_range,p_y_range,1,True,"fig2_left_angle.png",colormap='hsv')
