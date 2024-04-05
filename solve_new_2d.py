@@ -32,17 +32,16 @@ def omega(p_vec, A_arr_x, A_arr_y):
 def big_omega(p_par, p_perp, field, pot, omega):
     return field*(p_par-pot)/(2*omega*omega)*(-1)
 
-'''
 def RHS(t,y):
     return np.array([-1j*omega_interp(t)*y[0]-big_omega_interp(t)*y[1],-big_omega_interp(t)*y[0]+1j*omega_interp(t)*y[1]])
-'''
+
 ###
 ### Parameters
 ###
 
 e0 = 1
 om = 1
-N_pulses = 2
+N_pulses = 1
 N_osc = 2
 chi = np.pi/2
 sigma = 1
@@ -78,10 +77,10 @@ plt.show()
 potential_array_x = potential_array_function(field_array_x, domain)
 potential_array_y = potential_array_function(field_array_y, domain)
 
-r, theta = cart2pol(potential_array_x, potential_array_y)
-fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-ax.plot(theta, r)
-plt.show()
+# r, theta = cart2pol(potential_array_x, potential_array_y)
+# fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+# ax.plot(theta, r)
+# plt.show()
 
 p_vec = np.array([1,0.75,0.5])
 
@@ -96,50 +95,58 @@ big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
 
 # plt.plot(domain, potential_array_x)
 # plt.plot(domain, potential_array_y)
-plt.plot(domain,omega_array)
-plt.plot(domain,big_omega_array)
+# plt.plot(domain,omega_array)
+# plt.plot(domain,big_omega_array)
+# plt.show()
+
+p_z = 0
+
+pxmin = -1
+pxmax = 1
+n_px = 30
+p_x_range = np.linspace(pxmin,pxmax,n_px)
+
+pymin = -1
+pymax = 1
+n_py = 30
+p_y_range = np.linspace(pymin,pymax,n_py)
+
+amplitudes = np.zeros((n_py,n_px))
+
+for i_x, p_x in enumerate(p_x_range):
+    for i_y, p_y in enumerate(p_y_range):
+        omega_array = omega(np.array([p_x,p_y,p_z]),potential_array_x,potential_array_y)
+        omega_interp = interpolate.CubicSpline(domain, omega_array)
+        big_omega_array = np.array([-omega_interp(x,1)/(2*omega_interp(x)) for x in domain])
+        big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
+
+        solved = integrate.solve_ivp(RHS, (-T_tot/2,T_tot/2), np.array([1+0j,0j]))
+
+        amplitudes[i_x,i_y] = abs(solved.y[-1,-1])**2
+
+        # print(100*(p_y - pymin)/(pymax-pymin))
+    print(100*(p_x - pxmin)/(pxmax-pxmin))
+
+xs, ys = np.meshgrid(p_x_range,p_y_range,indexing='ij',sparse=True)
+result_interp = interpolate.RegularGridInterpolator((xs[:,0],ys[0,:]),amplitudes)
+
+# plt.imshow(amplitudes, origin='lower', extent=(pxmin, pxmax, pymin, pymax))
+# plt.show()
+
+x = np.linspace(pxmin, pxmax, n_px*10)
+y = np.linspace(pymin, pymax, n_py*10)
+xg, yg = np.meshgrid(x, y, indexing='ij', sparse=True)
+
+points_arr = np.array([[[j,i] for j in np.linspace(pxmin,pxmax,n_px*10)] for i in np.linspace(pymin,pymax,n_py*10)])
+
+result_array = result_interp(points_arr)
+
+plt.matshow(result_array, origin='lower', extent=(pxmin, pxmax, pymin, pymax))
 plt.show()
 
-
-'''
-domain = np.linspace(-T_tot/2,T_tot/2,domain_res)
-field_array = N_pulses*[e0*field_formula_function(i,t0,sigma,m) for i in domain]
-
-domain = np.linspace(-N_pulses*T_tot/2,N_pulses*T_tot/2,N_pulses*domain_res)
-potential_array = potential_array_function(field_array, domain)
-potential_interp = interpolate.CubicSpline(domain, potential_array)
-
-amplitudes = []
-for p_par in p_par_domain:
-    omega_array = omega(p_par,p_perp,potential_array)
-    big_omega_array = big_omega_f(p_par, p_perp, field_array, potential_array, omega_array)
-    omega_interp = interpolate.CubicSpline(domain, omega_array)
-    big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
-
-    solved = integrate.solve_ivp(RHS_f, (-N_pulses*T_tot/2,N_pulses*T_tot/2), np.array([1+0j,0j]))
-
-    amplitudes.append(abs(solved.y[-1,-1])**2)
-    print(100*(p_par - min(p_par_domain))/(max(p_par_domain)-min(p_par_domain)))
-
-plt.plot(p_par_domain, amplitudes)
-plt.show()
-
-amplitudes = []
-for p_par in p_par_domain:
-    omega_array = omega(p_par,p_perp,potential_array)
-    big_omega_array = big_omega(p_par, p_perp, field_array, potential_array, omega_array)
-    omega_interp = interpolate.CubicSpline(domain, omega_array)
-    big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
-
-    solved = integrate.solve_ivp(RHS, (-N_pulses*T_tot/2,N_pulses*T_tot/2), np.array([1+0j,0j]))
-
-    amplitudes.append(-8*abs(solved.y[-1,-1])**2)
-    print(100*(p_par - min(p_par_domain))/(max(p_par_domain)-min(p_par_domain)))
-
-plt.plot(p_par_domain, amplitudes)
-plt.savefig("sim111.png",dpi=300)
-plt.show()
-'''
+# plt.plot(p_par_domain, amplitudes)
+# plt.savefig("sim111.png",dpi=300)
+# plt.show()
 
 ###
 ### Accuracy test
