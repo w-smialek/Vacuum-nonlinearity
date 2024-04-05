@@ -2,11 +2,7 @@ import numpy as np
 from scipy import interpolate
 from scipy import integrate
 import matplotlib.pyplot as plt
-
-def cart2pol(x, y):
-    rho = np.sqrt(x**2 + y**2)
-    phi = np.arctan2(y, x)
-    return(rho, phi)
+import schwinger
 
 ###
 ### Arrays and interpolation
@@ -61,12 +57,7 @@ plt.plot(domain, field_array_x)
 plt.plot(domain, field_array_y)
 plt.show()
 
-r, theta = cart2pol(field_array_x, field_array_y)
-fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-ax.plot(theta, r)
-plt.show()
-
-##
+schwinger.polar_plot(field_array_x,field_array_y)
 
 ###
 ### Calculation 2D
@@ -77,21 +68,10 @@ plt.show()
 potential_array_x = potential_array_function(field_array_x, domain)
 potential_array_y = potential_array_function(field_array_y, domain)
 
-# r, theta = cart2pol(potential_array_x, potential_array_y)
-# fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-# ax.plot(theta, r)
-# plt.show()
-
 p_vec = np.array([1,0.75,0.5])
-
-omega_array = omega(p_vec,potential_array_x,potential_array_y)
-
 
 potential_interp_x = interpolate.CubicSpline(domain, potential_array_x)
 potential_interp_y = interpolate.CubicSpline(domain, potential_array_y)
-omega_interp = interpolate.CubicSpline(domain, omega_array)
-big_omega_array = np.array([-omega_interp(x,1)/(2*omega_interp(x)) for x in domain])
-big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
 
 # plt.plot(domain, potential_array_x)
 # plt.plot(domain, potential_array_y)
@@ -147,35 +127,3 @@ plt.show()
 # plt.plot(p_par_domain, amplitudes)
 # plt.savefig("sim111.png",dpi=300)
 # plt.show()
-
-###
-### Accuracy test
-###
-
-'''
-p_perp = 0
-p_par = 1.8
-amplitudes = []
-for T_tot in np.linspace(400,1000,70):
-    domain = np.linspace(-T_tot/2,T_tot/2,2000)
-    field_array = [e0*field_formula_function(i,t0,sigma,m) for i in domain]
-    potential_array = potential_array_function(field_array, domain)
-    potential_interp = interpolate.CubicSpline(domain, potential_array)
-
-    omega_array = omega(p_par,p_perp,potential_array)
-    big_omega_array = big_omega_f(p_par, p_perp, field_array, potential_array, omega_array)
-    omega_interp = interpolate.CubicSpline(domain, omega_array)
-    big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
-
-    # omega_array = omega(p_par,p_perp,potential_array)
-    # omega_interp = interpolate.CubicSpline(domain, omega_array)
-    # big_omega_array = np.array([-0.5*omega_interp(x,1)/omega_interp(x) for x in domain])
-    # big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
-
-    solved = integrate.solve_ivp(RHS_f, (-T_tot/2,T_tot/2), np.array([1+0j,0j]))
-
-    amplitudes.append(-1*abs(solved.y[-1,-1])**2)
-    print(T_tot)
-plt.plot(np.linspace(400,1000,70), amplitudes)
-plt.show()
-'''
