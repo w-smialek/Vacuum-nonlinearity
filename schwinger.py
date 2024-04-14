@@ -39,7 +39,7 @@ def polar_plot(X_arr,Y_arr,show=True,save=False):
     if show:
         plt.show()
 
-def schwinger_evolve(spin,p_vec,Ax_arr,Ay_arr,domain,initial_arr):
+def schwinger_evolve(spin,p_vec,Ax_arr,Ay_arr,domain,initial_arr,field_arr=None):
     '''if spin=1/2, only Ax should be nonzero'''
     if spin == 0:
         omega_arr = omega_array_function(p_vec, Ax_arr, Ay_arr)
@@ -49,18 +49,19 @@ def schwinger_evolve(spin,p_vec,Ax_arr,Ay_arr,domain,initial_arr):
         solved = integrate.solve_ivp(RHS, (np.min(domain),np.max(domain)), initial_arr, args=(omega_interp,big_omega_interp))
         return solved.y[-1,-1]
     if spin == 0.5:
-        potential_interp_x = interpolate.CubicSpline(domain, Ax_arr)
-        field_arr = np.array([-potential_interp_x(x,1) for x in domain])
+        if field_arr is None:
+            potential_interp_x = interpolate.CubicSpline(domain, Ax_arr)
+            field_arr = np.array([-potential_interp_x(x,1) for x in domain])
         omega_arr = omega_array_function(p_vec, Ax_arr, Ay_arr)
         omega_interp = interpolate.CubicSpline(domain, omega_arr)
         big_omega_array = big_omega_f_array_function(p_vec[0],np.sqrt(p_vec[1]**2+p_vec[2]**2),field_arr,Ax_arr,omega_arr)
         big_omega_interp = interpolate.CubicSpline(domain, big_omega_array)
-        solved = integrate.solve_ivp(RHS_f, (np.min(domain),np.max(domain)), initial_arr, args=(omega_interp,big_omega_interp))
+        solved = integrate.solve_ivp(RHS_f, (np.min(domain),np.max(domain)), initial_arr, args=(omega_interp,big_omega_interp),method='BDF')
         return solved.y[-1,-1]
-
-def plot_xy(array_ij, x_range, y_range, k_interp,show=True,save=False,colormap='viridis'):
-    '''takes array where value at point (x,y) is arr[x,y] and plots this array 
-    as a field, in cartesian coordintes. Interpolation is used and density of image is k_interp times
+    
+def ij_interp_xy(array_ij, x_range, y_range, k_interp):
+    '''takes array where value at point (x,y) is arr[x,y] and returns this array 
+    as a fieldin cartesian coordintes. Interpolation is used and density of image is k_interp times
     higher than original discrete data.
     x_range, y_range - arrays of argument values'''
     pxmin = min(x_range)
@@ -76,9 +77,18 @@ def plot_xy(array_ij, x_range, y_range, k_interp,show=True,save=False,colormap='
     y = np.linspace(pymin, pymax, n_py*k_interp)
 
     points_arr = np.array([[[j,i] for j in x] for i in y])
-    result_array = result_interp(points_arr)
+    return result_interp(points_arr)
 
-    plt.matshow(result_array, origin='lower', extent=(pxmin, pxmax, pymin, pymax),cmap=colormap)
+
+def plot_xy(array_xy,x_range, y_range,show=True,save=False,colormap='viridis'):
+    '''Plots array formatted as field in cartesian coordinates.
+    x_range, y_range - arrays of argument values'''
+    pxmin = min(x_range)
+    pxmax = max(x_range)
+    pymin = min(y_range)
+    pymax = max(y_range)
+    plt.matshow(array_xy, origin='lower', extent=(pxmin, pxmax, pymin, pymax),cmap=colormap)
+    plt.colorbar()
     if save:
         try:
             plt.savefig(str(save),dpi=300)

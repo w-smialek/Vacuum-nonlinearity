@@ -3,6 +3,7 @@ from scipy import interpolate
 from scipy import integrate
 import matplotlib.pyplot as plt
 import schwinger
+import time
 
 ###
 ### Arrays and interpolation
@@ -88,8 +89,8 @@ p_z = 0
 
 ###
 
-e0 = 0.1
-om = 0.99
+e0 = 0.5
+om = 1.2
 T_tot = 6*np.pi
 domain_res = 400
 N_pulses = 3
@@ -103,39 +104,50 @@ field_array_y = field_array[:,1]
 potential_array_x = schwinger.potential_array_function(field_array_x, domain)
 potential_array_y = schwinger.potential_array_function(field_array_y, domain)
 
-plt.plot(domain,field_array_x)
-plt.plot(domain,potential_array_x)
-plt.show()
+# plt.plot(domain,field_array_x)
+# plt.plot(domain,potential_array_x)
+# plt.show()
 
 pxmin = -2
 pxmax = 2
-n_px = 5
+n_px = 30
 p_x_range = np.linspace(pxmin,pxmax,n_px)
 
 pymin = -2
 pymax = 2
-n_py = 5
+n_py = 30
 p_y_range = np.linspace(pymin,pymax,n_py)
 
 p_z = 0
 
-# amplitudes = np.zeros((n_px,n_py))
-# angles = np.zeros((n_px,n_py))
-# for i_x, p_x in enumerate(p_x_range):
-#     for i_y, p_y in enumerate(p_y_range):
+###
+res = schwinger.schwinger_evolve(1/2,[1,1,1],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
+print('here')
+###
 
-#         res = schwinger.schwinger_evolve(1/2,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([0+1j,0j]))
-#         amplitudes[i_x,i_y] = np.sqrt(abs(res))
-#         ### PIERWIASTEK TU JEST!!! ^
-#         angles[i_x,i_y] = np.angle(res)
+start = time.time()
 
-#     print(100*(p_x - pxmin)/(pxmax-pxmin))
+amplitudes = np.zeros((n_px,n_py)).astype(complex)
+for i_x, p_x in enumerate(p_x_range):
+    for i_y, p_y in enumerate(p_y_range):
+
+        res = schwinger.schwinger_evolve(1/2,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
+        amplitudes[i_x,i_y] = res
+
+    print(100*(p_x - pxmin)/(pxmax-pxmin))
+
+end = time.time()
+
+print(end - start)
 
 # np.save('amplitudes',amplitudes)
-# np.save('angles',angles)
 
-amplitudes = np.load('amplitudes.npy')
-angles = np.load('angles.npy')
+# amplitudes = -1*np.load('amplitudes.npy')
+# amplitudes = np.flip(amplitudes,axis=0)
+# amplitudes = schwinger.ij_interp_xy(amplitudes,p_x_range,p_y_range,10)
 
-schwinger.plot_xy(amplitudes,p_x_range,p_y_range,10,True,"fig2_left_amplit.png")
-schwinger.plot_xy(angles,p_x_range,p_y_range,1,True,"fig2_left_angle.png",colormap='hsv')
+# moduli = np.sqrt(np.abs(amplitudes))
+# angles = np.angle(amplitudes)/np.pi
+
+# schwinger.plot_xy(moduli,p_x_range,p_y_range,True,"fig_amplit_o%0.2f_e%0.1f.png"%(om,e0))
+# schwinger.plot_xy(angles,p_x_range,p_y_range,True,"fig2_angle_o%0.2f_e%0.1f.png"%(om,e0),colormap='hsv')
