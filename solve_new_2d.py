@@ -35,12 +35,12 @@ def field_formula_function_2d(t, om, n_rep, n_osc, chi, delta, sigma):
 ### Parameters
 ###
 
-e0 = 1
-om = 1
-N_pulses = 1
+e0 = 0.1
+om = 1.0
+N_pulses = 3
 N_osc = 2
 chi = np.pi/2
-sigma = 1
+sigma = 0.3
 delta = np.pi/8
 
 T_tot = N_pulses*2*np.pi*om + 10
@@ -51,11 +51,11 @@ field_array = e0*np.array([field_formula_function_2d(t,om,N_pulses,N_osc,chi,del
 field_array_x = field_array[:,0]
 field_array_y = field_array[:,1]
 
-# plt.plot(domain, field_array_x)
-# plt.plot(domain, field_array_y)
-# plt.show()
+plt.plot(domain, field_array_x)
+plt.plot(domain, field_array_y)
+plt.show()
 
-# schwinger.polar_plot(field_array_x,field_array_y)
+schwinger.polar_plot(field_array_x,field_array_y,True,'polar.png')
 
 ###
 ### Calculation 2D
@@ -64,33 +64,40 @@ field_array_y = field_array[:,1]
 potential_array_x = schwinger.potential_array_function(field_array_x, domain)
 potential_array_y = schwinger.potential_array_function(field_array_y, domain)
 
-pxmin = 0.5
-pxmax = 3
+pxmin = -2
+pxmax = 2
 n_px = 50
 p_x_range = np.linspace(pxmin,pxmax,n_px)
 
-pymin = -1
-pymax = 1
-n_py = 30
+pymin = -2
+pymax = 2
+n_py = 50
 p_y_range = np.linspace(pymin,pymax,n_py)
 
 p_z = 0
 
-# amplitudes = np.zeros((n_px,n_py))
-# for i_x, p_x in enumerate(p_x_range):
-#     for i_y, p_y in enumerate(p_y_range):
+amplitudes = np.zeros((n_px,n_py)).astype(complex)
+for i_x, p_x in enumerate(p_x_range):
+    for i_y, p_y in enumerate(p_y_range):
 
-#         res = schwinger.schwinger_evolve(0,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
-#         amplitudes[i_x,i_y] = abs(res)**2
+        res = schwinger.schwinger_evolve(0,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
+        amplitudes[i_x,i_y] = res
 
-#     print(100*(p_x - pxmin)/(pxmax-pxmin))
+    print(100*(p_x - pxmin)/(pxmax-pxmin))
+    
+amplitudes = schwinger.ij_interp_xy(amplitudes,p_x_range,p_y_range,10)
 
-# schwinger.plot_xy(amplitudes,p_x_range,p_y_range,10,True,False)
+moduli = np.sqrt(np.abs(amplitudes))
+angles = np.angle(amplitudes)/np.pi
+
+schwinger.plot_xy(moduli,p_x_range,p_y_range,True,"2D_test_amp2.png")
+schwinger.plot_xy(angles,p_x_range,p_y_range,True,"2D_test_ang2.png",colormap='hsv')
+# schwinger.plot_xy(amplitudes,p_x_range,p_y_range,10,'2Dtest.png','viridis')
 
 ###
 
-e0 = 0.5
-om = 1.2
+e0 = 0.1
+om = 1.00
 T_tot = 6*np.pi
 domain_res = 400
 N_pulses = 3
@@ -110,12 +117,12 @@ potential_array_y = schwinger.potential_array_function(field_array_y, domain)
 
 pxmin = -2
 pxmax = 2
-n_px = 30
+n_px = 40
 p_x_range = np.linspace(pxmin,pxmax,n_px)
 
 pymin = -2
 pymax = 2
-n_py = 30
+n_py = 40
 p_y_range = np.linspace(pymin,pymax,n_py)
 
 p_z = 0
@@ -131,7 +138,7 @@ amplitudes = np.zeros((n_px,n_py)).astype(complex)
 for i_x, p_x in enumerate(p_x_range):
     for i_y, p_y in enumerate(p_y_range):
 
-        res = schwinger.schwinger_evolve(1/2,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
+        res = schwinger.schwinger_evolve(0,[p_x,p_y,p_z],potential_array_x,potential_array_y,domain,np.array([1+0j,0j]))
         amplitudes[i_x,i_y] = res
 
     print(100*(p_x - pxmin)/(pxmax-pxmin))
@@ -140,14 +147,14 @@ end = time.time()
 
 print(end - start)
 
-# np.save('amplitudes',amplitudes)
+np.save('amplitudes',amplitudes)
 
-# amplitudes = -1*np.load('amplitudes.npy')
-# amplitudes = np.flip(amplitudes,axis=0)
-# amplitudes = schwinger.ij_interp_xy(amplitudes,p_x_range,p_y_range,10)
+amplitudes = -1*np.load('amplitudes.npy')
+amplitudes = np.flip(amplitudes,axis=0)
+amplitudes = schwinger.ij_interp_xy(amplitudes,p_x_range,p_y_range,10)
 
-# moduli = np.sqrt(np.abs(amplitudes))
-# angles = np.angle(amplitudes)/np.pi
+moduli = np.sqrt(np.abs(amplitudes))
+angles = np.angle(amplitudes)/np.pi
 
-# schwinger.plot_xy(moduli,p_x_range,p_y_range,True,"fig_amplit_o%0.2f_e%0.1f.png"%(om,e0))
-# schwinger.plot_xy(angles,p_x_range,p_y_range,True,"fig2_angle_o%0.2f_e%0.1f.png"%(om,e0),colormap='hsv')
+schwinger.plot_xy(moduli,p_x_range,p_y_range,True,"fig_amplit_spin0_o%0.2f_e%0.1f.png"%(om,e0))
+schwinger.plot_xy(angles,p_x_range,p_y_range,True,"fig2_angle_spin0_o%0.2f_e%0.1f.png"%(om,e0),colormap='hsv')
