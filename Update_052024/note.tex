@@ -1,0 +1,671 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{physics}
+\usepackage{float}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{enumerate}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+
+\def\vecsign{\mathchar"017E}
+\def\dvecsign{\smash{\stackon[-1.95pt]{\vecsign}{\rotatebox{180}{$\vecsign$}}}}
+% \def\dvec#1{\def\useanchorwidth{T}\stackon[-4.2pt]{#1}{\,\dvecsign}}
+\def\dvec#1{\overset{\leftrightarrow}{#1}}
+\usepackage{stackengine}
+\stackMath
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\numberwithin{equation}{section}
+\DeclareMathOperator{\sgn}{sgn}
+
+\begin{document}
+    \title{Title (TBD)}
+    \author{Wojciech Śmiałek}
+    \date{}
+    \maketitle
+
+    % \begin{abstract}
+    % \end{abstract}
+
+    \section{The Klein - Gordon equation}
+    Schrodinger equation plays a fundamental role in quantum mechanics. It follows from the postulates 
+    of quantum mechanics, that a time evolution of a state vector in an isolated system ought to be described by a unitary transformation. 
+    That, by Stone's theorem \cite{stone} implies the existence of a self-adjoint Hamiltonian operator, which determines
+    the time evolution of a state vector, according to
+    \begin{equation}
+     i \hbar \partial_t |\psi\rangle_t = \hat H |\psi\rangle_t \label{sch1}.
+    \end{equation}
+    In this sense, the Schrodinger equation is fundamental to quantum mechanics, and the existence of a Hamiltonian operator is necessary for a well-defined quantum mechanical system.
+    The general Schrodinger equation (\ref{sch1}), however, is not equivalent to a wave equation governing the dynamics of a single nonrelativistic particle, often also simply called the Schrodinger equation:
+    \begin{equation}
+     i \hbar \partial_t \Psi(\vec x, t) = \left[ -\frac{\hbar^2}{2m} \bigtriangleup + V(\vec x,t) \right] \Psi(\vec x, t) \label{sch2}.
+    \end{equation} 
+    This equation cannot be universally valid, due to its lack of Lorentz covariance.
+    The description of a free relativistic particle necessitates the use of other Lorentz covariant wave equations,
+    the forms of which fundamentally depend on the spin of the described particle. 
+    Nonetheless, for any of these relativistic descriptions, the existence of a Hamiltonian acting 
+    on a Hilbert space of states is necessary for the quantum description to be meaningful.
+    
+    Virtually all of the relativistic descriptions of noninteracting particles are rooted in the free
+    Klein - Gordon equation.
+    Klein - Gordon equation is essentially a quantized relativistic
+    dispersion relation $E^2 = p^2c^2 + m^2c^4$, supplied with the de Broglie relation for the momentum and the wave vector of a matter wave, $p^\mu = \hbar k^\mu$.
+    The four-laplacian operator acting on a matter wave produces a
+    Lorentz scalar, the magnitude of which is determined by the aforementioned relations:
+    \begin{gather}
+     f_k = A e^{-ikx}\\
+     \partial^\mu f_{k} = -i k^\mu f_{k} = -\frac{i}{\hbar} p^\mu f_{k} = -\frac{i m}{\hbar} U^\mu f_{k}\\
+     \partial_\mu \partial^\mu f_{k} = \frac{m^2}{\hbar^2} U_\mu U^\mu f_{k} = \frac{m^2 c^2}{\hbar^2} f_{k}, \label{relation}
+    \end{gather}
+    where $U^\mu = \frac{dx^\mu}{d\tau}$ is a four-velocity and $U^\mu U_\mu = c^2$ follows directly from the kinematics of special relativity.
+    Conventionally, $x$ will represent a four-vector, while $\vec x$ will represent a three vector.
+    This relation, applied to a spin-0, or a single component scalar field, is called the free Klein - Gordon equation:
+    \begin{equation}
+     \left( \partial_\mu \partial^\mu - \frac{m^2 c^2}{\hbar^2} \right) \phi(x) = 0. \label{kg}
+    \end{equation}
+    The field $\phi(x)$ is in general a complex scalar. Real Klein-Gordon fields can be studied as well, but in this work, we shall focus solely on the complex case.
+    From this point onwards, we shall also use the natural system of units in which $c = \hbar = 1$. % unless explicitly stated otherwise.
+    The same relation that serves as a ground for the Klein-Gordon equation, can also be found in the vacuum Maxwell equations for potentials in the Lorentz gauge:
+    \begin{gather}
+     \partial_\nu \partial^\nu A^{\mu} = 0.
+    \end{gather}
+    Here, the mass of the field is equal to zero and the field itself is a vector or a spin-1 real field.
+    In this way, classical electrodynamics in a vacuum is essentially a relativistic wave equation for a massless real vector field,
+    and at the same time, a system of Klein-Gordon equations.
+    Relativistic wave equations for spinor fields satisfy certain other constraints, like the Dirac equation
+    in case of massive spin $1/2$ fields, but still, every component of a spinor field have to satisfy the Klein-Gordon equation \cite{sakurai}.
+          % MAYBE NOTE ON THE QUANTUM FIELDS AND HOW KG IS FUNDAMENTAL
+      % Furthermore, in the context of quantum field theory it can be shown that every component of a noninteracting quantum field satisfies a Klein-Gordon equation [weinberg].
+      % % Some of them, like spinor fields, satisfy additional equations as well, depending on the number of their components and
+      % % independent particle states, but Klein-Gordon equation serves as a starting point of any perturbative quantum field theory [weinberg].
+      % In this sense, relativistic quantum mechanics is essentially built on top of the Klein-Gordon equation.
+
+      % The space of solutions of the Klein-Gordon equation
+      % is a linear space of time-dependent square-integrable fields.
+      % \begin{equation}
+      %   \mathcal{V} = \left\{ \psi: \mathbb{R} \rightarrow L^2(\mathbb{R}^3) \quad | \quad \partial_t^2 \psi(x^0) -(\bigtriangleup + m^2)\psi(x^0) = 0 \right\}
+      %   % + basis of plane waves
+      % \end{equation}
+      % % ŻE WE WILL ONLY CONCIDER COMPLEX FIELDS
+
+     The general solution of a Klein-Gordon equation can be obtained using a Fourier transform:
+     \begin{gather}
+       \phi(x) = \int\frac{d^4 p}{(2\pi)^4} e^{-ipx} \tilde \phi(p)\\
+       \left( \partial_\mu \partial^\mu -  m^2 \right) \phi(x) = \int\frac{d^4 p}{(2\pi)^4} e^{-ipx} \left( p_\mu p^\mu -  m^2\right) \tilde \phi(p) = 0.
+     \end{gather}
+     The above equation have to be satisfied for an arbitrary $\tilde \phi(p)$, which is true if and only if the $\tilde \phi(p)$
+     is zero for all $p$ which do not satisfy $\left(p^0\right)^2 = E(\vec p)^2 = \vec p ^2 + m^2$. Specifically,
+     $\tilde \phi(p)$ have to take the form
+     \begin{equation}
+       \tilde \phi(p) = A(\vec p) \delta\left((p^0)^2 - E(\vec p)^2\right),
+     \end{equation}
+     with an arbitrary $A(\vec p)$.
+     % This means, that the basis of a space of solutions can be constructed from plane waves satisfying the relativistic dispersion relation:
+     % \begin{gather}
+     %   f_{\vec p} = e^{}
+     % \end{gather}
+     % We obtain a constraint, which has to be satisfied by the four-dimensional plane waves of all the momenta in order to solve Klein - Gordon equation:
+     % \begin{equation}
+     %   p_\mu p^\mu + m^2 = 0 \implies \left(p^0\right)^2 = E(\vec p)^2 = \vec p ^2 + m^2 \label{constraint}
+     % \end{equation}
+     The general solution for a field $\phi (x)$ will therefore be: %a combination of plane waves satisying (\ref{constraint}) with appriopriate coefficients $C(p)$:
+     \begin{equation}
+       \phi(x) = \int \frac{d^4p}{(2 \pi)^4} e^{-ipx} A(\vec p) \delta\left((p^0)^2 - E(\vec p)^2\right). \label{general}
+     \end{equation}
+     The set of four-momenta satisfying $\left(p^0\right)^2 = E(\vec p)^2$ consists of solutions with both positive and negative energy $p^0$.
+     This causes problems if the plane waves are to be interpreted as eigenstates of a physical particle with four-momentum $p$.
+     However, expression (\ref{general}) can equally well be rewritten with positive and negative frequency waves separately:
+     \begin{equation}
+       \phi(x) = \int \frac{d^4p}{(2 \pi)^4} \delta\left((p^0)^2 - E(\vec p)^2\right) \theta(p^0) \left( A(\vec p) e^{ipx} + B(\vec p) e^{-ipx} \right)
+     \end{equation}
+     This expression, although entirely equivalent to the previous one, suggests a different interpretation: there exist two types
+     of definite-momentum states, both with positive energy, but with different forms of time evolution.
+     An integral over the $p^0$ component can be performed to obtain a well-known result \cite{peskin}:%To integrate over the zeroth component of four-momentum (...)
+     \begin{equation}
+       \phi(x) = \int \frac{d^3p}{(2\pi)^3} \frac{1}{2 E(\vec p)} \left( A(\vec p) e^{ipx} + B(\vec p) e^{-ipx} \right) \Big|_{p^0 = E(\vec p)}.
+     \end{equation}
+     There, we can already see the fundamental feature of the Klein-Gordon equation and the 
+     relativistic quantum mechanics as a whole - the existence of a charge degree of freedom, in addition to the usual momentum degree of freedom.
+            % Klein Gordon field at an instance $x^0$ features two distinct states corresponding to any given 
+      % momentum $\vec p$ - one with positive and one with negative frequency:
+      % \begin{equation}
+      %   \psi_{\vec p}^{\lambda} = \mathcal{N} e^{-\lambda i p x}
+      % \end{equation}
+      % Here $\mathcal{N}$ stands for a normalization constant. For the fields with an infinite domain, these states
+      % cannot be normalized and do not belong to the space of solutions $\mathcal{V}$, but instead it should be understood
+      % as a limit $L\rightarrow \infty$ of a theory defined in a finite quantization box of length $L$, where momentum labels are discrete
+      % and the normalization factor is $\mathcal{N} = \frac{..}{L^3}$. Now, the general solution (\ref{general}) can be understood
+      % as a decomposition of a generic Klein-Gordon field $\psi \in \mathcal{V}$ in the basis formed by the solutions with well defined momentum and charge $\{ \psi_{\vec p}^{\lambda} \}$.
+      % % To speak of a proper quantum mechanical interpretation of the Klein-Gordon field, however, we need to endow the space of solutions $\mathcal{V}$ with
+      % % a positive-definite, relativistically invariant inner product and an evolution operator, unitary with respect to this inner product - an issue with we have already stressed.
+      % % Much of the theoretical significance of the one-particle Klein-Gordon equation can be uncovered when one understand how and under what circumstances can it be done.
+      \subsection{Charge current density}
+      If the field $\phi(x)$ is to be interpreted as a probability amplitude for localizing a particle at point $\vec x$ and at time $x^0$,
+      there would need to exist a probability density $\rho$ and a probability current $\vec j$ satisfying a continuity equation, which ensures a conservation of total probability:
+      \begin{equation}
+        \partial_t \rho + \vec\nabla \cdot \vec j = 0.
+      \end{equation}
+      Since we discuss a relativistic theory, we have to require relativistic invariance of this equation.
+      The continuity equation can be rewritten in the following way:
+      \begin{gather}
+        \begin{gathered}
+        \partial_\mu j^\mu = 0 \label{cont-rel} \\
+        j^\mu := \begin{pmatrix}
+          c \rho\\
+          \vec j
+        \end{pmatrix}.
+    \end{gathered}
+      \end{gather}
+      Provided that $j^\mu$ is a four-vector, (\ref{cont-rel}) will indeed be valid independent of a reference frame.
+      Maintaining the simplest interpretation, that a value of the Klein-Gordon field at some point is a probability amplitude for localizing a particle at that point,
+      suggests the following naive definition of $j^\mu$:
+      \begin{equation}
+        j^\mu := \begin{pmatrix}
+          c \cdot \phi^* \phi \\
+          \frac{\hbar}{2 m i} \cdot \phi^* \dvec \nabla \phi \label{naive}
+        \end{pmatrix},
+      \end{equation}
+      where for a differential operator $D$, we define $f \dvec D g := f D g - g D f$.
+      Implicitly, this interpretation also assumes that there is a set of states with a well-defined position which forms a basis of the 
+      Hilbert space of the system and that the inner product of the Hilbert space is the standard inner product of non-relativistic quantum mechanics. 
+      % This does not raise any issues in the ordinary quantum mechanics, but (turns out to be problematic in RQM).
+      If one defines the density according to (\ref{naive}), using the plane wave ansatz it is easy to show that the continuity equation is not satisfied [ref].
+      The current $j^\mu$ defined according to (\ref{naive}) is not a four-vector. 
+      The definition has to be modified to ensure the Lorentz covariance of the current:
+      \begin{equation}
+        j^\mu := \frac{i \hbar}{2m} \ \phi^* \dvec{\partial^\mu} \phi.
+      \end{equation}
+      Thusly defined four-current satisfies the continuity equation for any solution of the Klein-Gordon equation:
+      \begin{gather}
+        \begin{gathered}
+        \partial_\mu j^\mu = \frac{i \hbar}{2m} \partial_\mu \left[\phi^* \dvec{\partial^\mu} \phi \right]
+        = \frac{i \hbar}{2m} \left[ \partial_\mu \phi^* \partial^\mu \phi + \phi^* ( \Box \phi ) - ( \Box \phi^* ) \phi - \partial^\mu \phi^* \partial_\mu \phi \right]\\
+        = \frac{i \hbar}{2m} \left[ \mu \phi^* \phi - \mu \phi^* \phi \right] = 0.
+        \end{gathered}
+      \end{gather}
+      The consequence of this generalized definition is that now the density $\rho(x)$ is allowed to have both positive and
+      negative values, depending on the initial conditions of the Klein-Gordon field. The probability density interpretation
+      cannot thus be applicable. Instead, when describing a charged particle, the current $j^\mu$ multiplied by the particle's charge
+      can be interpreted as an electric charge four-current:
+      %  the four vector $j^\mu$ is interpreted as the electric charge density and current.
+      % The field $\phi$ is understood to have a dimension of charge and () can be rewritten using a dimensionless field $\phi = e \psi$:
+      \begin{equation}
+        J^\mu = e j^\mu = \frac{i \hbar e}{2m} \ \phi^* \dvec{\partial^\mu} \phi.
+      \end{equation} 
+      This relates the Klein - Gordon field to an observable quantity, but it is still insufficient for a quantum mechanical understanding of the Klein-Gordon equation.
+      To speak of a proper quantum mechanical interpretation of the Klein-Gordon field, we need to endow the space of solutions of the Klein-Gordon equation $\mathcal{V}$ with
+      a positive-definite, relativistically invariant inner product and an evolution operator unitary with respect to this inner product - an issue which we have already stressed.
+      Much of the theoretical significance of the one-particle Klein-Gordon equation can be uncovered when one understands how and under what conditions it can be done.
+      
+      \subsection{Klein - Gordon equation in Schrodinger form}
+      % In an attempt to identify the 
+      The chief difference between the Schrodinger equation (\ref{sch2}) and the Klein - Gordon equation (\ref{kg}), as it stands, is the order of the differential equation.
+      The existence of the additional charge degree of freedom in the latter can be attributed to this difference.
+      The second order of the Klein - Gordon equation indicates that its solutions have two degrees of freedom - the initial field configuration and the initial time derivative or the field momentum.
+      % This is indicateas welld  by the sign degree of freedom of the eigenfunctions $\Phi^{(\pm)}_{\vec p}$. 
+      To stress this, one can express the Klein - Gordon field in terms of two components, $\eta$ and $\chi$, incorporating
+      both the field configuration and field momentum. 
+      The most natural definition, $\eta = \phi$ and $\chi = i \partial_t \phi$, yields equations which are
+      not symmetrical and are quite difficult to work with. Instead, the more convenient symmetrical form of the equation can be obtained
+      with the following definition:
+      \begin{gather}
+        \begin{gathered}
+        \phi = \frac{ 1}{\sqrt{2}} (\eta + \chi)\\
+        i \frac{\partial \phi}{\partial t} = \frac{ 1}{\sqrt{2}} (\eta - \chi). \label{component1}
+        \end{gathered}
+      \end{gather}
+      This produces two coupled differential equations for $\eta$ and $\chi$ components:
+      \begin{gather}
+        \begin{gathered}
+        i \frac{\partial \eta}{\partial t} = - \frac{1}{2m} \nabla^2 (\eta + \chi) + m \eta \\
+        i \frac{\partial \chi}{\partial t} = \frac{1}{2m} \nabla^2 (\eta + \chi) - m \chi. \label{two_kg}
+        \end{gathered}
+      \end{gather}
+      % That this system of equations is equivalent to the Klein - Gordon equation can be seen \dots\\
+      The equations can be put in a more compact form, by defining
+      \begin{equation}
+        \Psi(\vec x,t) = \begin{pmatrix}
+          \eta(\vec x,t) \\
+          \chi(\vec x,t)
+        \end{pmatrix}. \label{component2}
+      \end{equation}
+      % Then, (\ref{two_kg}) can be expressed with the help of the Pauli matrices $\hat\tau_i$ and the momentum operator $\hat p = -i \nabla$ as
+      % \begin{gather}
+      %   i \frac{\partial \Psi}{\partial t} = \hat H_0 \Psi\\ \label{kg_sch}
+      %   \hat H_0 = (\hat\tau_3 + i\hat\tau_2) \frac{\hat p^2}{2m} + \hat\tau_3 m
+      % \end{gather}
+     Then, (\ref{two_kg}) can be expressed with the help of the Pauli matrices $\hat\tau_i$ as
+     \begin{gather}
+       i \partial_t \Psi(\vec x,t) = \hat H_0 \Psi(\vec x,t)\\ \label{kg_sch}
+       \hat H_0 = (\hat\tau_3 + i\hat\tau_2) \frac{- \nabla^2}{2m} + \hat\tau_3 m.
+     \end{gather}
+     This first-order differential equation looks exceptionally similar to the Schrodinger wave equation (\ref{sch2}), with the addition of the rest mass term and the Pauli operators.
+     The charge density expressed in terms of the two-component representation takes the form
+     \begin{equation}
+       J^0 = e \Psi^\dagger \hat \tau_3 \Psi.
+     \end{equation}
+     The space integral of the charge density should be equal to the total charge of a field.
+     If $\Psi$ is used to describe a single particle or an antiparticle, the normalization
+     condition can be formulated:
+     \begin{gather}
+       Q = e \int d^3x \Psi^\dagger \hat \tau_3 \Psi = \pm e \implies \int d^3x \Psi^\dagger \hat \tau_3 \Psi = \pm 1.
+     \end{gather}
+     This suggests that the correct form of the inner product for Klein-Gordon fields differs from the ordinary inner product
+     of non-relativistic quantum mechanics. The Klein - Gordon product is defined as:
+     \begin{equation}
+       (\Psi | \Psi')_{\text{KG}} := \int d^3 x \Psi^\dagger \hat \tau_3 \Psi' \label{inner}.
+     \end{equation}
+     For the expression on the right-hand side to be convergent, it is sufficient that both the argument
+     components are square integrable $\mathbb{R}^3 \rightarrow \mathbb{C}$ functions. The domain
+     of the product (\ref{inner}) can therefore be defined as
+     \begin{equation}
+       \mathcal{V} = \left\{ \Psi \in L^2(\mathbb{R}^3) \oplus L^2(\mathbb{R}^3) \ | \ i \partial_t \Psi = \hat H_0 \Psi \right\}.
+     \end{equation}
+     The key remaining problem is the lack of positive-definiteness of the Klein-Gordon product (\ref{inner}).
+     Due to its indefiniteness, the Klein-Gordon product does not form a proper Hilbert space over the vector space $\mathcal{V}$ and there are
+     unavoidable problems with introducing a probabilistic interpretation of such a theory.
+     One can proceed with describing an indefinite-metric theory and accept the Klein-Gordon equation as only
+     an intermediate step to a proper framework of Quantum Field Theory.
+     In fact, for a theory containing any kind of interaction, a single-particle sector of QFT cannot be separated
+     and, as we shall see, in these circumstances there is no simple single-particle quantum theory\footnote{Hilbert space of an interacting Quantum Field Theory is not a free particles' Fock space \cite{weinberg}}.
+     For a free Quantum Field Theory, however, single-particle description is a fundamental building block
+     %  constructed from a single-particle description [ref]
+     and it is crucial to understand it properly.
+     % One option is to proceed with an indefinite-metric theory, abandoning probabilistic interpretation for the charge density (...).
+     % Another path, studied, among others, by Mostafazadeh and Zamani is to redefine the product (\ref{inner}) in order to make it 
+     % both relativistically invariant and positive-definite. 
+     % In [ref] (eq. ..), they provide the expression for the most general positive definite, relativistically invariant and conserved inner product on the space
+     % of solutions of the Klein - Gordon equation and construct a Hilbert space of the Klein-Gordon theory.
+     We shall continue a systematic introduction of a theory based on indefinite inner product (\ref{inner}), treating
+     $\Psi$ as a classical field belonging to $\mathcal{V}$, rather than a quantum mechanical wavefunction,
+     and then discuss the conditions that allow us to formulate a proper probabilistic theory.      
+      % The way to circumvent these problems and arrive at a proper quantum mechanical theory is to restrict the space
+      % $\mathcal{V}$ to purely positive-frequency or purely negative-frequency solutions, i.e. to consider purely one-particle or one-antiparticle states.
+
+      % Another path, studied, among others, by Mostafazadeh and Zamani is to further modify
+      % the product (\ref{inner}). 
+      % In [ref] (eq. ..) they provide the
+      % expression for the most general positive definite, relativistically invariant and conserved inner product on the space
+      % of solutions of the Klein - Gordon equation and the construction of Hilbert space over space $\mathcal{V}$.
+      % The Klein-Gordon product (\ref{inner}) can be recovered as a special case
+      % of the general form of inner product, when the space of states is restricted to 
+      % purely positive- or purely negative-frequency solutions.
+      % Here, we will further investigate the theory obtained with an unmodified product (\ref{inner}) by restricting the space of states.
+
+      \subsection{Solutions of the Klein -Gordon equation and the Feshbach-Villard representation}
+      % (ze 2 zdania jeszcze tutaj)
+      Adopting the Klein-Gordon inner product implies a modified definition of the operator hermitian conjugation, denoted by $\ddagger$:
+      \begin{equation}
+        \Omega^\ddagger = \hat \tau_3 \Omega^\dagger \hat \tau_3
+      \end{equation}
+      Under this definition, operator $\hat H_0$ introduced in (\ref{kg_sch}) is a self-adjoint operator and
+      it generates an evolution operator, which conserves the inner product: % Can we just say it is unitary?
+      \begin{equation}
+        (\hat S(t) \Psi | \hat S(t) \Psi')_{\text{KG}} = (e^{-i \hat H_0 t} \Psi | e^{-i \hat H_0 t} \Psi')_{\text{KG}} =  (\Psi | \Psi')_{\text{KG}}
+      \end{equation}
+      To find the eigenvectors of Hamiltonian operator $\hat H_0$, we use the following ansatz:
+      \begin{equation}
+        \Psi(\vec x, t) = \Psi_0(\vec p) e^{-i \lambda p x} = \begin{pmatrix}
+          \eta_0(\vec p)\\
+          \chi_0(\vec p)
+        \end{pmatrix} e^{-i \lambda p x} 
+      \end{equation}
+      and insert it into the equation (\ref{kg_sch}).
+      This yields the eigenvalue equation $\hat H_0 \Psi_{\vec p}^\lambda = h \Psi_{\vec p}^\lambda$ with a distinct eigenvalue for each charge and momentum $h_{\vec p}^\lambda = \lambda \sqrt{m^2+\vec p^2} \equiv \lambda E_{\vec p}$.
+      With an additional condition required for the normalization of basis states to the Dirac delta, $\eta_0^2 - \chi_0^2 = 1$, corresponding eigenvectors of the Hamiltonian are:
+      \begin{equation}
+        \Psi^\lambda_{\vec p}(\vec x, t) = 
+        \frac{1}{2 \sqrt{m E_{\vec p}}}
+        \begin{pmatrix}
+          m + \lambda E_{\vec p} \\
+          m - \lambda E_{\vec p}
+        \end{pmatrix}
+        e^{-i \lambda p x}.
+      \end{equation}
+      They satisfy the orthogonality condition:
+      \begin{equation}
+        (\Psi^\lambda_{\vec p}|\Psi^{\lambda'}_{\vec q}) = \lambda \delta_{\lambda\lambda'} \delta(\vec p - \vec q)
+      \end{equation}
+      and as a result, a generic state $\Psi$ can be decomposed according to
+      \begin{equation}
+        \Psi(\vec x, t) = \sum_\lambda \int \frac{d^3p}{(2\pi)^3} \lambda (\Psi^\lambda_{\vec p}|\Psi) \cdot \Psi^\lambda_{\vec p}(\vec x, t).
+      \end{equation}
+      % The energy of these states is always positive and independent of $\lambda$. We can see this
+      % by looking at the expression for the mean energy of a system in an eigenstate $\Psi^\lambda_{\vec p}$:
+      % \begin{equation}
+      %   \langle E \rangle = ( \Psi^\lambda_{\vec p}| \hat H_0 | \Psi^\lambda_{\vec p}) = \lambda E_{\vec{p}} ( \Psi^\lambda_{\vec p} | \Psi^\lambda_{\vec p}) = \lambda^2 E_{\vec{p}} \cdot \delta(0)
+      % \end{equation}
+
+      The structure of the Klein-Gordon equation is fundamentally based on the momentum and charge, rather than the position and charge.
+      The difficulty of constructing states with a well-defined position and charge at the same time is a characteristic feature
+      of relativistic field equations\cite{localization}. Therefore, rather than $\Psi(\vec x,t)$, it is the momentum-space field,
+      \begin{equation}
+      \Phi(\vec p, t) = \int d^3 x \Psi(\vec x, t) e^{-i \vec p \cdot \vec x},
+      \end{equation}
+      which is more natural to work with.
+      Later on, we shall see how the field $\Phi(\vec p, t)$ relates to a physical wave function.
+      % Rather than with a field $\Psi(\vec x,t)$, it is more natural then to work with a fourier transformed field $\Phi = \int \Psi() $.
+      The Schrodinger equation for field $\Phi(\vec p,t)$ can be derived by inserting fourier decomposition of $\Psi(\vec x, t)$ in (\ref{kg_sch}) \cite{feshbach}:
+      \begin{gather}
+       i \partial_t \Phi(\vec p, t) = \left[ \frac{\vec{p}^2}{2m} (\hat\tau_3 + i\hat\tau_2)  + \hat\tau_3 m\right] \Phi(\vec p, t).
+      \end{gather}
+      The immediate result is that the Hamiltonian operator $\hat H_0$ is now diagonal in the momentum operator $\nabla_x$.
+      % OGARNĄĆ JAK JEST Z WEKTORAMI BAZOWYMI TAU-SPACE PRZED ROTACJĄ I CO ONE Z POCZĄTKU ZNACZĄ
+      % TAK TO JESTEŚMY JUŻ W DOMU I TYLKO ROTUJEMY W TAU, NIE W PRZESTRZENI FUNKCYJNEJ
+      Eigenvectors of the Hamiltonian in momentum space are:
+        \begin{equation}
+        \Phi^{\lambda}_{\vec q }(\vec p, t) = 
+        % \begin{pmatrix}
+        %   \eta_{\vec q}^\lambda(\vec p, t) \\
+        %   \chi_{\vec q}^\lambda(\vec p, t)
+        % \end{pmatrix}
+        % \delta(\vec p - \vec q)
+        % e^{-\lambda E_{\vec{q}} \ t}
+        \Phi_0(\vec q,\lambda)
+        \delta(\vec p - \vec q)
+        e^{-\lambda E_{\vec{q}} \ t}
+        =
+          \frac{1}{2 \sqrt{m E_{\vec q}}}
+          \begin{pmatrix}
+            m + \lambda E_{\vec q} \\
+            m - \lambda E_{\vec q}
+          \end{pmatrix}
+          \delta(\vec p - \vec q)
+          e^{-\lambda E_{\vec{q}} \ t}.
+      \end{equation}
+      Let us denote the standard basis vectors of the charge space as
+      \begin{equation}
+        e_{(+)} = 
+        \begin{pmatrix}
+          1 \\
+          0
+        \end{pmatrix} \quad
+        e_{(-)} = 
+        \begin{pmatrix}
+          0 \\
+          1
+        \end{pmatrix}.
+      \end{equation}
+      So far, the field $\Phi$ has been expressed in terms of these vectors as
+      \begin{equation}
+        \Phi(\vec p, t) = \eta(\vec p,t) \ e_{(+)} + \chi(\vec p,t) \ e_{(-)}.
+      \end{equation}
+      In much the same way as the Fourier transform rotated the infinite-dimensional functional space
+      from the position basis to the preferred momentum basis, a charge space can be rotated 
+      from the basis $\{ e_{(+)},e_{(-)} \}$ to $\{\Phi_0(\vec q,+),\Phi_0(\vec q,-)\}$:
+      \begin{equation}
+       \bar \Phi(\vec p,t) = u(\vec p,t) \ \Phi_0(\vec p,+) + v(\vec p,t) \ \Phi_0(\vec p,-).
+      \end{equation}
+      This allows the Hamiltonian eigenvectors to be eigenvectors of both the momentum operator $\nabla_x$ and
+      the charge sign operator $\hat \tau_3$. We shall call $\bar \Phi$ a field in the Feshbach-Villard representation.
+      The momentum space field $\Phi$ in the standard representation and field $\bar \Phi$ in the Feshbach-Villard representation
+      are related to each other by a linear transformation $U$ \cite{feshbach}:
+            \begin{equation}
+        \Phi = 
+        \begin{pmatrix}
+          \eta(\vec p,t) \\
+          \chi(\vec p,t)
+        \end{pmatrix}
+        = \frac{1}{2 \sqrt{m E_{\vec q}}}
+        \begin{pmatrix}
+          m + \lambda E_{\vec q} & m - \lambda E_{\vec q} \\
+          m - \lambda E_{\vec q} & m + \lambda E_{\vec q} \\
+        \end{pmatrix}
+        \begin{pmatrix}
+          u(\vec p,t) \\
+          v(\vec p,t)
+        \end{pmatrix}
+        = U(\vec p) \bar \Phi(\vec p,t).
+      \end{equation}
+      Thus, the Hamiltonian eigenvectors in the Feshbach-Villard representation are:
+      \begin{equation}
+        \Phi^{(+)}_{\vec q }(\vec p, t) =  
+        \begin{pmatrix}
+          1 \\
+          0
+        \end{pmatrix}
+        \delta(\vec p - \vec q)
+        e^{- E_{\vec{q}} \ t}
+        \qquad
+        \Phi^{(-)}_{\vec q }(\vec p, t) =  
+        \begin{pmatrix}
+          0 \\
+          1
+        \end{pmatrix}
+        \delta(\vec p - \vec q)
+        e^{+ E_{\vec{q}} \ t}.
+      \end{equation}
+      Because both the functional space basis and the charge space basis now coincide with the Hamiltonian eigenvectors,
+      is is easy to confirm that the Schrodinger equation will now take on a particularly simple form:
+      \begin{gather}
+        i \partial_t \bar \Phi(\vec p, t) = \hat H_0 \bar \Phi(\vec p, t) = \hat \tau_3 E_{\vec p} \bar \Phi(\vec p, t).
+      \end{gather}
+
+
+
+      % Notice, that in this representation vectors with well-defined charge still are not eigenvectors of the operator $\hat \tau_3$.
+      % Rather than handling the factors of $E_{\vec q}$ and $m$, it is helpful to perform a rotation in the two dimensional charge space.
+
+      \subsection{Quantum States of the Klein-Gordon Theory}
+      \begin{itemize}
+        \item Comparison of one particle free QFT sector and the klein gordon equation
+        \item Mostafazadeh and Zamani \cite{kghilbert} approach
+      \end{itemize}
+
+      %%%%
+
+      % \begin{gather}
+      %   (\lambda E_{\vec p} - m) \eta_0 = (p^2/2m)(\eta_0 + \chi_0)\\
+      %   (\lambda E_{\vec p} + m) \chi_0 = - (p^2/2m)(\eta_0 + \chi_0)
+      % \end{gather}
+      % where $E_{\vec p} = \sqrt{m^2 + p^2}$. The basis of solutions consists therefore of the states
+
+      % Comparing the form of a $\lambda = +1$ and $\lambda = -1$ solutions in the two-component representation reveals that the two
+      % are related by a transformation which we will call a charge conjugation
+      % \begin{equation}
+      %   \Psi_C = \hat\tau_3 \Psi^*
+      % \end{equation}
+      % % Charge conjugation follows from comparing a (wavefunction?) with well defined momentum and positive or negative charge.
+      % In the two-component representation, the functions defined in (\ref{eigenfun}) will take form
+      % \begin{equation}
+      %   \Psi_{\vec p}^\lambda = \begin{pmatrix}
+      %     \eta^\lambda_{\vec p} \\
+      %     \chi^\lambda_{\vec p}
+      %   \end{pmatrix} = 
+      %   \cdots = \begin{pmatrix}
+      %     mc^2 + \lambda E_{\vec p} \\
+      %     mc^2 - \lambda E_{\vec p}
+      %   \end{pmatrix} e^{-i \lambda p x}
+      % \end{equation}
+      % Applying charge conjugation then results in a followig transformation:
+      % \begin{gather}
+      %   (\Psi_{\vec p}^\lambda)_C = \cdots = \Psi_{-\vec p}^{-\lambda}\\
+      %   \rho(x) \rightarrow -\rho(x)
+      % \end{gather}
+      % Additionally, charge conjugation is involutive:
+      % \begin{equation}
+      %   (\Psi_C)_C = \Psi
+      % \end{equation}
+      % Thus, if the state $\Psi$ describes a particle, then $\Psi_C$ describes the corresponding antiparticle.
+      % The charge conjugation can be used to split space $\mathcal{V}$ into two subspaces $\mathcal{V}_\pm$ according to
+      % \begin{equation}
+      %   \mathcal{V}_\pm := \{  \Psi_\pm \in \mathcal{V} \ | \ (\Psi_\pm)_C = \pm \Psi_\pm \}
+      % \end{equation}
+      % By restricting the space to the positive frequency states $\mathcal{V}_+$, the Klein-Gordon product becomes positive-definite.
+      % A generic field in $\mathcal{V}_+$ can be decomposed in the basis of plane waves % SLOWO O TYM ELEMENCIE PSI PM VEC P
+      % \begin{equation}
+      %   \Psi_+ (x) = \int \frac{d^3p}{(2\pi)^3} \frac{1}{2 E(\vec p)} A(\vec p) e^{- ipx} \equiv \int d^3p \ A(\vec p) \Psi^+_{\vec p}
+      % \end{equation}
+      % %= \int d^3p \ A(\vec p) |\Psi^\pm_{\vec p} \rangle
+      % Then, the vectors $|\Psi^+_{\vec p}\rangle$ can be interpreted as a states of a particle with well defined charge $\lambda = + 1$
+      % and momentum $\vec p$. The Klein-Gordon product of these states yields
+      % \begin{equation}
+      %   (\Psi^+_{\vec p} | \Psi^+_{\vec q})_{\text{KG}} = \cdots = \delta(\vec p - \vec q)%\int d^3 x \Psi^\dagger \hat \tau_3 \Psi'
+      % \end{equation}
+      % Adopting the Klein-Gordon inner product also implies a modified definition of the hermitian conjugation of an operator, from now on denoted by $\ddagger$:
+      % \begin{equation}
+      %   \Omega^\ddagger = \hat \tau_3 \Omega^\dagger \hat \tau_3
+      % \end{equation}
+      % Under this definition, operator $\hat H_0$ introduced in (\ref{kg_sch}) is a hermitian operator and
+      % the corresponding evolution operator of the differential equation (\ref{kg_sch}), $\hat S(t)$ is unitary:
+      % \begin{equation}
+      %   (\hat S(t) \Psi | \hat S(t) \Psi')_{\text{KG}} = (e^{-i \hat H_0 t} \Psi | e^{-i \hat H_0 t} \Psi')_{\text{KG}} = ... =  (\Psi | \Psi')_{\text{KG}}
+      % \end{equation}
+
+      % The key requirement for the consistency of this approach is the lack of mixing between the positive- and negative-frequency
+      % states. If this requirement is satisfied, then an initial state $\Psi_0 \in \mathcal{V}_\pm$ remain in the space $\mathcal{V}_\pm$
+      % at all times and its evolution can be consistently described by a unitary operator. As we shall see, this requirement
+      % is satisfied in a noninteracting theory, but failes when a background electromagnetic potential is introduced.
+
+
+      % I TUTAJ JAZDA O PRZESTRZENI STANÓW, KONIECZNOŚCI OBCIĘCIA ALBO Mostafazadeh and Zamani I DOPIERO POTEM
+      % ORTONORM UNITARITY ITD JUŻ JAKO POKAZANIE ŻE W TEJ PRZESTRZENI HILBERTA WSZYSTKO GRA DOKŁADNIE JAK TRZEBA
+
+
+      % Comparing the form of a $\lambda = +1$ and $\lambda = -1$ solutions in the two-component representation reveals that the two
+      % are related by a transformation which we will call a charge conjugation
+      % \begin{equation}
+      %   \Psi_C = \hat\tau_3 \Psi^*
+      % \end{equation}
+      % % Charge conjugation follows from comparing a (wavefunction?) with well defined momentum and positive or negative charge.
+      % In the two-component representation, the functions defined in (\ref{eigenfun}) will take form
+      % \begin{equation}
+      %   \Psi_{\vec p}^\lambda = \begin{pmatrix}
+      %     \eta^\lambda_{\vec p} \\
+      %     \chi^\lambda_{\vec p}
+      %   \end{pmatrix} = 
+      %   \cdots = \begin{pmatrix}
+      %     mc^2 + \lambda E_{\vec p} \\
+      %     mc^2 - \lambda E_{\vec p}
+      %   \end{pmatrix} e^{-i \lambda p x}
+      % \end{equation}
+      % Applying charge conjugation then results in a followig transformation:
+      % \begin{gather}
+      %   (\Psi_{\vec p}^\lambda)_C = \cdots = \Psi_{-\vec p}^{-\lambda}\\
+      %   \rho(x) \rightarrow -\rho(x)
+      % \end{gather}
+      % Additionally, charge conjugation is (zwrotna):
+      % \begin{equation}
+      %   (\Psi_C)_C = \Psi
+      % \end{equation}
+      % Thus, if the state $\Psi$ describes a particle, then $\Psi_C$ describes the corresponding antiparticle.
+      % Existence of antiparticle, or of an additional charge degree of freedom in wavefunction is crucial for a proper
+      % formulation of relativistic quantum mechanics.
+
+      % Only structure, THEN observables, energy vs hamiltonian and also charge observable - charge current density
+      % and problems with localization      
+
+      %% >>> Inner product
+      %% >>> Unitarity of evolution + hamiltonian is not an energy operator
+
+      % It is now tempting to interpret the field $\Psi$ and operator $\hat H_0$
+      % as the wavefunction and the Hamiltonian of the quantum mechanical system generated by the KG eq.
+      % We expect $\hat H_0$ to be a hermitian operator, however it turns out not to be the case
+      % \begin{equation}
+      %   \hat H_0^\dagger = (\hat\tau_3 - i\hat\tau_2) \frac{\hat p^2}{2m} + \hat\tau_3 m \neq \hat H_0
+      % \end{equation}
+      % Instead, the following identity holds:
+      % \begin{equation}
+      %   \hat\tau_3 \hat H_0^\dagger \hat\tau_3 =  \hat H_0
+      % \end{equation}
+      % Moreover, a straightforward calculation shows, that charge density expressed in terms of $\Psi$ is
+      % \begin{equation}
+      %   J^0 = e \Psi^\dagger \tau_3 \Psi
+      % \end{equation}
+      % which implies the following condition for normalization of $\Psi$:
+      % \begin{equation}
+      %   \int d^3 x \Psi^\dagger \hat \tau_3 \Psi = \pm 1
+      % \end{equation}
+      % The seemingly problematic features of Klein Gordon equations become more clear, when we %are resolved by/coś innego ale nie to
+      % realize that the inner product adequate for the KG eq. is not the standard inner product, but one
+      % involving a charge conjugation:
+      % \begin{gather}
+      %   \Psi_C = \hat\tau_3 \Psi^*\\
+      %   (\Psi | \Psi') := \int d^3 x \Psi_C^T \Psi' = \int d^3 x \Psi^\dagger \hat \tau_3 \Psi' \label{inner}
+      % \end{gather}
+      % Charge conjugation follows from comparing a (wavefunction?) with well defined momentum and positive or negative charge.
+      % In the two-component representation, the functions defined in (\ref{eigenfun}) will take form
+      % \begin{equation}
+      %   \Psi_{\vec p}^\lambda = \begin{pmatrix}
+      %     \eta^\lambda_{\vec p} \\
+      %     \chi^\lambda_{\vec p}
+      %   \end{pmatrix} = 
+      %   \cdots = \begin{pmatrix}
+      %     mc^2 + \lambda E_{\vec p} \\
+      %     mc^2 - \lambda E_{\vec p}
+      %   \end{pmatrix} e^{-i \lambda p x}
+      % \end{equation}
+      % Applying charge conjugation then results in a followig transformation:
+      % \begin{gather}
+      %   (\Psi_{\vec p}^\lambda)_C = \cdots = \Psi_{-\vec p}^{-\lambda}\\
+      %   \rho(x) \rightarrow -\rho(x)
+      % \end{gather}
+      % Additionally, charge conjugation is (zwrotna):
+      % \begin{equation}
+      %   (\Psi_C)_C = \Psi
+      % \end{equation}
+      % Thus, if the state $\Psi$ describes a particle, then $\Psi_C$ describes the corresponding antiparticle.
+      % As it was shown in [ref], the inner product (\ref{inner}) is the simpliest example of positive-definite,
+      % relativistically invariant and conserved inner product on the space of solutions of the Klein-Gordon equation.
+      % The Hilbert space constructed using this inner product is unitarily equivalent to $L^2(\mathbb{R})\oplus L^2(\mathbb{R})$.
+      % The solutions physically correspond to states with well defined momentum and charge, and any state can be decomposed
+      % as: %% Jakoś inaczej, tutaj dać bazę, rozkład jedności itp. wszystko rozjaśnić ostatecznie, hermiticity and evolution operator unitarity
+
+      % The situation is not so simple for the position wavefunction. The value of Klein-Gordon field at a particular point
+      % in space and time does not correspond to the probability amplitude for localizing the field at this point. Localization
+      % schemes like the one of Newton and Wigner [ref] can be employed, but even then the position wavefunction (is different...),
+      % specifically, the eigenstates of position operator are not dirac deltas, but packets of width approximately equal to
+      % two de broglie wavelengths. Eventually, any attempts of constructing localized state in the relativistic quantum mechanics come into problems related to  (no-go theorems) [refs].
+      % %% O wadze stopnia swobody z antycząstkami w RQM (???)
+
+      % Observables, evolution generating operator is different than the energy observable\\
+
+      % As we shall see, the limitations of one-particle relativistic quantum mechaincs
+      % does not lie in the existence of the sign degree of freedom or the 'negative energy problem', which is easily
+      % resolved by interpreting it as the charge of a particle, a feature which becomes fundamental in the RQM,
+      % but rather in the problem of mixing positive- and negative-charge states. Only selected observables in the noninteracting
+      % theory preserve the charge degree of freedom, while a superposition of positive- and negative-charge states can
+      % hardly be considered a state of a single particle. This problem is resolved only when the KG equation is reinterpreted
+      % as an equation governing a quantum field operator, acting on the states from the many-particle Fock space.
+    \subsection{Klein - Gordon equation in a backround electromagnetic field}
+    \begin{itemize}
+      \item       Minimal coupling prescription
+      \item       One - particle wavefunctions with homogenous background field
+      \item       Non-unitarity, mixing of positive and negative states, Klein Paradox and the necessity of quantum fields
+    \end{itemize}
+      %Newton - Wigner localization, Zitterbewegung, 
+      % Non-unitarity -> It is an open system -> Relativistic particle + EM field requires a field as a quantum system -> QFT
+    \subsection{Quantum fields}
+    \begin{itemize}
+      \item       Second quantization
+      \item       Second quantizaton with c-number background electromagnetic potential
+      \item       Bogoliubov transformation
+    \end{itemize}
+  \section{Sauter-Schwinger effect}
+  \section{Numerical results}
+  \section{Conclusions}
+
+\begin{thebibliography}{9}
+    \bibitem{stone}
+    Stone, M. H. (1930). Linear Transformations in Hilbert Space: III. Operational Methods and Group Theory. Proceedings of the National Academy of Sciences, 16(2), 172-175. doi:10.1073/pnas.16.2.172
+    \bibitem{sakurai}
+    Sakurai, J. J., Napolitano, J. (2020). Modern Quantum Mechanics. Cambridge University Press. doi:10.1017/9781108587280
+    \bibitem{peskin}
+    Peskin, M. E., Schroeder, D. V. (1995). An Introduction to Quantum Field Theory. Westview Press.
+    \bibitem{weinberg}
+    Weinberg, S. (1995). Quantum Theory of Fields. Press Syndicate of the University of Cambridge.
+    \bibitem{feshbach}
+    Feshbach, H., Villars, F. (1958). Elementary Relativistic Wave Mechanics of Spin 0 and Spin 1/2 Particles. Reviews of Modern Physics, 30(1), 24-45. doi:10.1103/revmodphys.30.24
+    \bibitem{kghilbert}
+    Mostafazadeh, A., Zamani, F. (2006). Quantum mechanics of Klein-Gordon fields I: Hilbert Space, localized states, and chiral symmetry. Annals of Physics, 321(9), 2183-2209. doi:10.1016/j.aop.2006.02.007
+    \bibitem{qftlimit}
+    Padmanabhan, T. (2018). Obtaining the non-relativistic quantum mechanics from quantum field theory: issues, folklores and facts. The European Physical Journal C, 78(7). doi:10.1140/epjc/s10052-018-6039-y
+    \bibitem{localization}
+    Falcone, R., Conti, C. (2023). Localization in Quantum Field Theory. doi:10.48550/arXiv.2312.15348
+\end{thebibliography}
+
+\end{document}
