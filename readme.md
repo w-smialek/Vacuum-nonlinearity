@@ -1,6 +1,6 @@
 # Schwinger pair production in the extremely powerful laser light for the scalar electrodynamics
 
-The reference for this project is the article *Krajewska, K., & Kamiński, J. Z. (2019). Unitary versus pseudounitary time evolution and statistical effects in the dynamical Sauter-Schwinger process. Physical Review. A/Physical Review, A, 100(6). https://doi.org/10.1103/physreva.100.062116*. 
+The reference for this project is the article by *Krajewska, K., & Kamiński, J. Z. (2019). Unitary versus pseudounitary time evolution and statistical effects in the dynamical Sauter-Schwinger process. Physical Review. A/Physical Review, A, 100(6). https://doi.org/10.1103/physreva.100.062116*. 
 The goal is to first validate the code for the Schwinger pairs momentum distribution for bosonic matter and linearly polarized light, and then implement the arbitrary polarization and study 2D momentum distributions along with possible vortex structures. This would allow for comparison with the spin 1/2 electrons and determining what effects are introduced by a spin, and what are inherent to the Schwinger process itself. 
 **Work in progess**.
 
