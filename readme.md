@@ -2,26 +2,25 @@ W przypadku przestrzennie jednorodnego pola elektrycznego spolaryzowanego liniow
 
 ![](./plots/porownanie.png)
 
-Wykonałem symulacje dwuwymiarowego rozkładu pędów liniowo spolaryzowanego światła dla parametrów i postaci pola z artykułu *Bechler, Velez, Krajewska, Kamiński (2023)*. Tutaj wykresy z fig. 2. tego artykułu dla elektronów i moje wyniki dla spinu 0. Dla tych parametrów w przypadku spinu 0 nie występują żadne wiry ani nie zachodzi łączenie się ich.
+I performed simulations of the two-dimensional momentum distribution of linearly polarized light for the parameters and form of the field from the article *Bechler, Velez, Krajewska, Kaminski (2023)*. Here the diagrams from fig. 2. of this article for electrons and my results for spin 0. For these parameters in the case of spin 0 there are no vortices and no vortex merging occur.
 
 ![](./plots/vortices.png)
 
-W końcu, dla bozonów po niewielkiej modyfikacji można tym samym sposobem symulować efekt działania pola o polaryzacji zależnej od czasu. Przyjąłem następującą postać pola:
+Finally, for bosons, after a slight modification, the effect of a field with time-dependent polarization can be simulated by the same method. I assumed the following form of the field:
 $$\vec{\mathcal{E}}(t) = \begin{cases} \mathcal{E}_0 \begin{pmatrix}\sin^2(n_{\text{rep}}\omega t/2)\cos(n_{\text{rep}}n_{\text{osc}}\omega t+\chi)\cos(\delta) \\ \sigma \sin^2(n_{\text{rep}}\omega t/2)\sin(n_{\text{rep}}n_{\text{osc}}\omega t+\chi)\sin(\delta) \end{pmatrix} \ \text{if} \ \ 0 < \omega t < 2\pi n_\text{rep} \\ 0 \qquad \text{else} \end{cases} $$ 
-Gdzie $n_{\text{rep}}$ to ilość powtórzeń impulsu, a $n_{\text{osc}}$ to ilość oscylacji w powtórzeniu.
-Pole o dowolnej polaryzacji zależnej od czasu można przedstawić na wykresie we współrzędnych biegunowych $r(\phi) = |\vec{\mathcal{E}}| \left(\arg(\vec{\mathcal{E}})\right)$. Poniżej wykres przebiegu impulsu i rozkład pędów dla parametrów:
+Where $n_{\text{rep}}$ is the number of repetitions of the pulse, and $n_{\text{osc}}$ is the number of oscillations in a repetition.
+The field of any time-dependent polarity can be represented on a graph in polar coordinates $r(\phi) = |\vec{\mathcal{E}}| \left(\arg(\vec{\mathcal{E}})\right)$. Below is a plot of the pulse waveform and momentum distribution for the parameters:
 $$ \mathcal{E}_0 = 0.5  \frac{m_e^2 c^3}{e}, \ \omega = 1.2 m_ec^2, \ n_\text{rep} = 3, \ n_\text{osc}=2, \ \chi = \frac{\pi}{2}, \ \sigma = 1, \ \delta = \frac{\pi}{8}$$
-Przyjmuję tutaj konwencję z artykułu *Kamiński, Krajewska (2019)*, gdzie w analitycznych wyrażeniach $\hbar = 1$, natomiast w symulacjach numerycznych $m = m_e = c = h = 1$.
-Dodatkowo, na poniższym wykresie $e=1$, tak że bezwymiarowa amplituda oznacza ułamek krytycznego natężenia pola Schwingera $\mathcal{E}_S = \frac{m_e^2 c^3}{e}$.
+Here I adopt the convention from the article *Kaminski, Krajewska (2019)*, where in analytical expressions $\hbar = 1$, while in numerical simulations $m = m_e = c = h = 1$.
+In addition, in the diagram below $e=1$, so that the dimensionless amplitude denotes the fraction of the critical Schwinger field strength $\mathcal{E}_S = \frac{m_e^2 c^3}{e}$.
 
 ![](./plots/polar.png)
 
-Amplituda rozkładu pędów:
-
+Amplitude of the momentum distribution:
 ![](./plots/2D/2D_test_amp.png)
-Faza rozkładu pędów:
+Phase of the momentum distribution:
 ![](./plots/2D/2D_test_ang.png)
-Analogiczne wykresy dla zmodyfikowanych parametrów $\mathcal{E}_0 = 0.1 \mathcal{E}_S, \ \omega = m_e c^2, \  \sigma = 0.3$ (pozostałe parametry pozostawione bez zmian):
+Analogous graphs for modified parameters $\mathcal{E}_0 = 0.1 \mathcal{E}_S, \ \omega = m_e c^2, \  \sigma = 0.3$ (other parameters left unchanged):
 
 ![](./plots/polar1.png)
 
