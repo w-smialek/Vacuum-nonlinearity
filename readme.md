@@ -12,10 +12,10 @@ I performed simulations of the two-dimensional momentum distribution of linearly
 ![](./plots/vortices.png)
 
 Finally, for bosons, after a slight modification, the effect of a field with time-dependent polarization can be simulated by the same method. I assumed the following form of the field:
-$$\vec{\mathcal{E}}(t) = \begin{cases} \mathcal{E}_0 \begin{pmatrix}\sin^2(n_{\text{rep}}\omega t/2)\cos(n_{\text{rep}}n_{\text{osc}}\omega t+\chi)\cos(\delta) \\ \sigma \sin^2(n_{\text{rep}}\omega t/2)\sin(n_{\text{rep}}n_{\text{osc}}\omega t+\chi)\sin(\delta) \end{pmatrix} \ \text{if} \ \ 0 < \omega t < 2\pi n_\text{rep} \\ 0 \qquad \text{else} \end{cases}$$ 
-Where $n_{\text{rep}}$ is the number of repetitions of the pulse, and $n_{\text{osc}}$ is the number of oscillations in a repetition.
+
+Where $n\_{\text{rep}}$ is the number of repetitions of the pulse, and $n\_{\text{osc}}$ is the number of oscillations in a repetition.
 The field of any time-dependent polarity can be represented on a graph in polar coordinates $r(\phi) = |\vec{\mathcal{E}}| \left(\arg(\vec{\mathcal{E}})\right)$. Below is a plot of the pulse waveform and momentum distribution for the parameters:
-$$\mathcal{E}_0 = 0.5  \frac{m_e^2 c^3}{e}, \ \omega = 1.2 m_ec^2, \ n_\text{rep} = 3, \ n_\text{osc}=2, \ \chi = \frac{\pi}{2}, \ \sigma = 1, \ \delta = \frac{\pi}{8}$$
+$$\mathcal{E}_0 = 0.5  \frac{m_e^2 c^3}{e}, \ \omega = 1.2 m_ec^2, \ n\_\text{rep} = 3, \ n\_\text{osc} =2, \ \chi = \frac{\pi}{2}, \ \sigma = 1, \ \delta = \frac{\pi}{8}$$
 Here I adopt the convention from the article *Kaminski, Krajewska (2019)*, where in analytical expressions $\hbar = 1$, while in numerical simulations $m = m_e = c = h = 1$.
 In addition, in the diagram below $e=1$, so that the dimensionless amplitude denotes the fraction of the critical Schwinger field strength $\mathcal{E}_S = \frac{m_e^2 c^3}{e}$.
 
