@@ -27,6 +27,6 @@ Analogiczne wykresy dla zmodyfikowanych parametrów $\mathcal{E}_0 = 0.1 \mathca
 
 ![[2D_test_amp2.png]]
 
-![[2D_test_ang2.png]]
+![](./plots/2D/2D_test_ang2.png)
 
-W najbliższym czasie planuję poprawić wydajność kodu przez zaimplementowanie solvera równań różniczkowych w cythonie lub z użyciem kompilatora numba, tak by można było wielokrotnie zwiększyć rozdzielczość i badać różne parametry pola przy rozsądnym czasie symulacji.
+The next step will be improving code efficiency by implementing differential equation solver in cython or JIT compiler Numba, so that the resolution can be significantly enhanced and different field parameters can be studied in a reasonable execution time.
