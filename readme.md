@@ -14,18 +14,17 @@ $$ \mathcal{E}_0 = 0.5  \frac{m_e^2 c^3}{e}, \ \omega = 1.2 m_ec^2, \ n_\text{re
 Przyjmuję tutaj konwencję z artykułu *Kamiński, Krajewska (2019)*, gdzie w analitycznych wyrażeniach $\hbar = 1$, natomiast w symulacjach numerycznych $m = m_e = c = h = 1$.
 Dodatkowo, na poniższym wykresie $e=1$, tak że bezwymiarowa amplituda oznacza ułamek krytycznego natężenia pola Schwingera $\mathcal{E}_S = \frac{m_e^2 c^3}{e}$.
 
-![[polar.png]]
+![](./plots/polar.png)
 
 Amplituda rozkładu pędów:
 
-![[2D_test_amp.png]]
+![](./plots/2D/2D_test_amp.png)
 Faza rozkładu pędów:
-![[2D_test_ang.png]]
+![](./plots/2D/2D_test_ang.png)
 Analogiczne wykresy dla zmodyfikowanych parametrów $\mathcal{E}_0 = 0.1 \mathcal{E}_S, \ \omega = m_e c^2, \  \sigma = 0.3$ (pozostałe parametry pozostawione bez zmian):
 
-![[polar 1.png]]
 
-![[2D_test_amp2.png]]
+![](./plots/2D/2D_test_amp2.png)
 
 ![](./plots/2D/2D_test_ang2.png)
 
