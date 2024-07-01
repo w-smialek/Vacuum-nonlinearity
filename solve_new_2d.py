@@ -55,7 +55,7 @@ plt.plot(domain, field_array_x)
 plt.plot(domain, field_array_y)
 plt.show()
 
-schwinger.polar_plot(field_array_x,field_array_y,True,'polar.png')
+schwinger.polar_plot(field_array_x,field_array_y,True,'.\\plots\\polar.png')
 
 ###
 ### Calculation 2D
@@ -90,8 +90,8 @@ amplitudes = schwinger.ij_interp_xy(amplitudes,p_x_range,p_y_range,10)
 moduli = np.sqrt(np.abs(amplitudes))
 angles = np.angle(amplitudes)/np.pi
 
-schwinger.plot_xy(moduli,p_x_range,p_y_range,True,"2D_test_amp2.png")
-schwinger.plot_xy(angles,p_x_range,p_y_range,True,"2D_test_ang2.png",colormap='hsv')
+schwinger.plot_xy(moduli,p_x_range,p_y_range,True,".\\plots\\2D\\2D_test_amp2.png")
+schwinger.plot_xy(angles,p_x_range,p_y_range,True,".\\plots\\2D\\2D_test_ang2.png",colormap='hsv')
 # schwinger.plot_xy(amplitudes,p_x_range,p_y_range,10,'2Dtest.png','viridis')
 
 ###
@@ -156,5 +156,5 @@ amplitudes = schwinger.ij_interp_xy(amplitudes,p_x_range,p_y_range,10)
 moduli = np.sqrt(np.abs(amplitudes))
 angles = np.angle(amplitudes)/np.pi
 
-schwinger.plot_xy(moduli,p_x_range,p_y_range,True,"fig_amplit_spin0_o%0.2f_e%0.1f.png"%(om,e0))
-schwinger.plot_xy(angles,p_x_range,p_y_range,True,"fig2_angle_spin0_o%0.2f_e%0.1f.png"%(om,e0),colormap='hsv')
+schwinger.plot_xy(moduli,p_x_range,p_y_range,True,".\\plots\\2D\\fig_amplit_spin0_o%0.2f_e%0.1f.png"%(om,e0))
+schwinger.plot_xy(angles,p_x_range,p_y_range,True,".\\plots\\2D\\fig2_angle_spin0_o%0.2f_e%0.1f.png"%(om,e0),colormap='hsv')
