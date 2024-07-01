@@ -55,7 +55,7 @@ plt.plot(domain, field_array_x)
 plt.plot(domain, field_array_y)
 plt.show()
 
-schwinger.polar_plot(field_array_x,field_array_y,True,'.\\plots\\polar.png')
+schwinger.polar_plot(field_array_x,field_array_y,True,'.\\plots\\polar2.png')
 
 ###
 ### Calculation 2D
