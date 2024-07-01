@@ -1,10 +1,10 @@
 W przypadku przestrzennie jednorodnego pola elektrycznego spolaryzowanego liniowo, wyniki porównałem raz jeszcze z *Kamiński, Krajewska (2019) "Unitary versus pseudounitary ..."*, konkretnie z fig. 5. Wyniki mojej symulacji pokrywają się z artykułem na tyle dokładnie, na ile można to sprawdzić bez danych liczbowych. 
 
-![[porownanie.png]]
+![](./plots/porownanie.png)
 
 Wykonałem symulacje dwuwymiarowego rozkładu pędów liniowo spolaryzowanego światła dla parametrów i postaci pola z artykułu *Bechler, Velez, Krajewska, Kamiński (2023)*. Tutaj wykresy z fig. 2. tego artykułu dla elektronów i moje wyniki dla spinu 0. Dla tych parametrów w przypadku spinu 0 nie występują żadne wiry ani nie zachodzi łączenie się ich.
 
-![[vortices.png]]
+![](./plots/vortices.png)
 
 W końcu, dla bozonów po niewielkiej modyfikacji można tym samym sposobem symulować efekt działania pola o polaryzacji zależnej od czasu. Przyjąłem następującą postać pola:
 $$\vec{\mathcal{E}}(t) = \begin{cases} \mathcal{E}_0 \begin{pmatrix}\sin^2(n_{\text{rep}}\omega t/2)\cos(n_{\text{rep}}n_{\text{osc}}\omega t+\chi)\cos(\delta) \\ \sigma \sin^2(n_{\text{rep}}\omega t/2)\sin(n_{\text{rep}}n_{\text{osc}}\omega t+\chi)\sin(\delta) \end{pmatrix} \ \text{if} \ \ 0 < \omega t < 2\pi n_\text{rep} \\ 0 \qquad \text{else} \end{cases} $$ 
@@ -23,6 +23,7 @@ Faza rozkładu pędów:
 ![](./plots/2D/2D_test_ang.png)
 Analogiczne wykresy dla zmodyfikowanych parametrów $\mathcal{E}_0 = 0.1 \mathcal{E}_S, \ \omega = m_e c^2, \  \sigma = 0.3$ (pozostałe parametry pozostawione bez zmian):
 
+![](./plots/polar1.png)
 
 ![](./plots/2D/2D_test_amp2.png)
 
